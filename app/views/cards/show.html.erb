@@ -1,0 +1,69 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Set:</strong>
+  <%= @card.set %>
+</p>
+
+<p>
+  <strong>Quality:</strong>
+  <%= @card.quality %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @card.type_id %>
+</p>
+
+<p>
+  <strong>Cost:</strong>
+  <%= @card.cost %>
+</p>
+
+<p>
+  <strong>Health:</strong>
+  <%= @card.health %>
+</p>
+
+<p>
+  <strong>Attack:</strong>
+  <%= @card.attack %>
+</p>
+
+<p>
+  <strong>Faction:</strong>
+  <%= @card.faction %>
+</p>
+
+<p>
+  <strong>Class:</strong>
+  <%= @card.class_id %>
+</p>
+
+<p>
+  <strong>Elite:</strong>
+  <%= @card.elite %>
+</p>
+
+<p>
+  <strong>Collectible:</strong>
+  <%= @card.collectible %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @card.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @card.description %>
+</p>
+
+<p>
+  <strong>Popularity:</strong>
+  <%= @card.popularity %>
+</p>
+
+<%= link_to 'Edit', edit_card_path(@card) %> |
+<%= link_to 'Back', cards_path %>
