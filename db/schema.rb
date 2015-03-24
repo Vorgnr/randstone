@@ -11,17 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150320153508) do
+ActiveRecord::Schema.define(version: 20150320165001) do
+
+  create_table "cards_users", id: false, force: :cascade do |t|
+    t.integer "user_id", limit: 4, null: false
+    t.integer "card_id", limit: 4, null: false
+  end
 
   create_table "cards", force: :cascade do |t|
     t.integer  "set",         limit: 4
     t.integer  "quality",     limit: 4
-    t.integer  "type_id",        limit: 4
+    t.integer  "type_id",     limit: 4
     t.integer  "cost",        limit: 4
     t.integer  "health",      limit: 4
     t.integer  "attack",      limit: 4
     t.integer  "faction",     limit: 4
-    t.integer  "class_id",       limit: 4
+    t.integer  "class_id",    limit: 4
     t.integer  "elite",       limit: 4
     t.integer  "collectible", limit: 4
     t.string   "name",        limit: 255
@@ -29,6 +34,12 @@ ActiveRecord::Schema.define(version: 20150320153508) do
     t.integer  "popularity",  limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
 end

@@ -8,19 +8,22 @@
 
 json = ActiveSupport::JSON.decode(File.read(File.dirname(__FILE__) + '/cards.json'))
 
-json.each do |c|
-  Card.create({
-    :id => c['id'],
-    :set => c['set'],
-    :quality => c['quality'],
-    :type_id => c['type'],
-    :health => c['health'],
-    :attack => c['attack'],
-    :class_id => c['class'],
-    :elite => c['elite'],
-    :collectible => c['collectible'],
-    :description => c['description'],
-    :name => c['name'],
-    :popularity => c['popularity']
-  })
-end
+# json.each do |c|
+#   Card.create({
+#     :id => c['id'],
+#     :set => c['set'],
+#     :quality => c['quality'],
+#     :type_id => c['type'],
+#     :health => c['health'],
+#     :attack => c['attack'],
+#     :class_id => c['class'],
+#     :elite => c['elite'],
+#     :collectible => c['collectible'],
+#     :description => c['description'],
+#     :name => c['name'],
+#     :popularity => c['popularity']
+#   })
+# end
+
+User.create(name: 'Sebastien')
+User.create(name: 'Arnaud', cards: [Card.new(id: 5)])

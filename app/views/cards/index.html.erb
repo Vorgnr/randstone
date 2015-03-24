@@ -2,6 +2,22 @@
 
 <h1>Listing Cards</h1>
 
+<label>Name filter</label>
+<input type="text" id="nameFilter">
+
+<select id="classFilter">
+    <option value="0">All</option>
+    <option value="1">Priest</option>
+    <option value="2"></option>
+    <option value="3"></option>
+    <option value="4"></option>
+    <option value="5"></option>
+    <option value="6"></option>
+    <option value="7"></option>
+    <option value="8"></option>
+    <option value="9"></option>
+</select>
+
 <table>
   <thead>
     <tr>
@@ -24,7 +40,7 @@
 
   <tbody>
     <% @cards.each do |card| %>
-      <tr>
+      <tr class="card-line">
         <td><%= card.set %></td>
         <td><%= card.quality %></td>
         <td><%= card.type_id %></td>
@@ -38,9 +54,9 @@
         <td><%= card.name %></td>
         <td><%= card.description %></td>
         <td><%= card.popularity %></td>
-        <td><%= link_to 'Show', card %></td>
-        <td><%= link_to 'Edit', edit_card_path(card) %></td>
-        <td><%= link_to 'Destroy', card, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <!--<td><%= link_to 'Show', card %></td>-->
+        <!--<td><%= link_to 'Edit', edit_card_path(card) %></td>-->
+        <!--<td><%= link_to 'Destroy', card, method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
       </tr>
     <% end %>
   </tbody>
@@ -49,3 +65,33 @@
 <br>
 
 <%= link_to 'New Card', new_card_path %>
+
+<script>
+    (function($, window, document) {
+
+        var handlingNameFilter = function() {
+            $('#nameFilter').keyup(function() {
+                $.each($('tr.card-line'), function(i, val) {
+                    if ($(val).text().indexOf($(this).val()) == -1) {
+                        $('tr.card-line').eq(i).hide();
+                    } else {
+                        $('tr.card-line').eq(i).show();
+                    }
+                }.bind(this));
+            });
+        };
+
+        var handlingClassFilter = function() {
+            $('#classFilter').change(function() {
+                if($(this).val()) {
+
+                }
+            });
+        };
+
+        $(function() {
+            handlingNameFilter();
+            handlingClassFilter();
+        });
+    }(window.jQuery, window, document));
+</script>
