@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  resources :users
-
+  resources :users do
+    get '/cards', to: 'users#cards'
+  end
   resources :cards
 
   # The priority is based upon order of creation: first created -> highest priority.

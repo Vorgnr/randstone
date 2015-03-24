@@ -13,11 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20150320165001) do
 
-  create_table "cards_users", id: false, force: :cascade do |t|
-    t.integer "user_id", limit: 4, null: false
-    t.integer "card_id", limit: 4, null: false
-  end
-
   create_table "cards", force: :cascade do |t|
     t.integer  "set",         limit: 4
     t.integer  "quality",     limit: 4
@@ -34,6 +29,11 @@ ActiveRecord::Schema.define(version: 20150320165001) do
     t.integer  "popularity",  limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+  end
+
+  create_table "cards_users", id: false, force: :cascade do |t|
+    t.integer "card_id", limit: 4, null: false
+    t.integer "user_id", limit: 4, null: false
   end
 
   create_table "users", force: :cascade do |t|

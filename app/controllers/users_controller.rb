@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  respond_to :html
 
   # GET /users
   # GET /users.json
@@ -59,6 +60,12 @@ class UsersController < ApplicationController
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def cards
+    @user =  User.find(params[:user_id])
+    @cards = Card.all
+    # respond_with({ :user => User.find(params[:user_id]), :cards => @cards})
   end
 
   private
