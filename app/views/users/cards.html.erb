@@ -38,6 +38,8 @@
     <option value="8+">8+</option>
 </select>
 
+<input id="saveButton" type="button" value="save"/>
+
 <table>
     <thead>
     <tr>
@@ -49,11 +51,10 @@
         <th>Attack</th>
         <th>Faction</th>
         <th>Class</th>
-        <th>Elite</th>
-        <th>Collectible</th>
         <th>Name</th>
         <th>Description</th>
         <th>Popularity</th>
+        <th><input type="button" value="Add All"/></th>
         <th colspan="3"></th>
     </tr>
     </thead>
@@ -72,6 +73,7 @@
             <td class="card-name"><%= card.name %></td>
             <td><%= card.description %></td>
             <td><%= card.popularity %></td>
+            <td><input type="button" value="+"/></td>
         </tr>
     <% end %>
     </tbody>
@@ -79,44 +81,22 @@
 
 <script>
     (function($, window, document) {
-
-        var filters = [];
         var costFilter = function(selectedValue, element) {
             return selectedValue === "All" || element === selectedValue || (selectedValue === "8+" && parseInt(element) >= 8)
         };
 
         var contains = function(selectedValue, element) {
-            return element.indexOf(selectedValue) > -1;
+            return element === '' || element.toLowerCase().indexOf(selectedValue.toLowerCase()) > -1;
         };
 
-        var applyFilters = function(selectedValue, element) {
-            var result = true;
-            filters.forEach(function(f) {
-                if(!f(selectedValue, element)){
-                    result = false;
-                    return;
-                }
-            });
-            return result;
-        };
-
-        var addFilter = function(filter) {
-            if(filters.indexOf(filter) == -1)
-                filters.push(filter);
-        };
-
-        var removeFilter = function(filter) {
-            var index = filters.indexOf(filter);
-            if(~index){
-                filters.splice(index, 1);
-            }
+        var typeFilter = function(selectedValue, element) {
+            return selectedValue === "All" || element === selectedValue;
         };
 
         var handlingFilters = function(selectorId, eventName, filter, element, parent){
             $(selectorId).on(eventName, function() {
-                addFilter(filter);
                 $.each($(element), function(i, val) {
-                    if (applyFilters($(this).val(), $(val).text()))
+                    if (filter($(this).val(), $(val).text()))
                         $(val).parent(parent).show();
                     else
                         $(val).parent(parent).hide();
@@ -124,38 +104,50 @@
             });
         };
 
-        var selectFilter = function(id, td, parent) {
-            $(id).change(function() {
-                $.each($(td), function(i, e) {
-                    if($(this).val() === "All" || $(e).text() === $(this).val())
-                        $(e).parent(parent).show();
-                    else
-                        $(e).parent(parent).hide();
-                }.bind(this));
-            });
-        };
-
         var handlingNameFilter = function() {
-            handlingFilters('#nameFilter', 'keyup', contains , 'td.card-name', 'tr');
+            handlingFilters('#nameFilter', 'keyup', contains, 'td.card-name', 'tr');
         };
 
         var handlingClassFilter = function() {
-            //handlingFilters('#classFilter', 'change',  , 'td.card-class', 'tr');
+            handlingFilters('#classFilter', 'change',  typeFilter, 'td.card-class', 'tr');
         };
 
         var handlingCostFilter = function() {
             handlingFilters('#costFilter', 'change', costFilter, 'td.card-cost', 'tr');
-        }
+        };
 
         var handlingTypeFitler = function() {
-            selectFilter('#typeFilter', 'td.card-type', 'tr');
+            handlingFilters('#typeFilter', 'change', typeFilter, 'td.card-type', 'tr');
+        };
+
+        var getCardToSave = function() {
+            return [1 , 2 ,3];
+        };
+
+        var handlingSave = function() {
+            $('#saveButton').click(function() {
+                $.ajax({
+                    type: "POST",
+                    url: '<%= user_add_cards_path %>',
+                    data: JSON.stringify({ cards:  getCardToSave() }),
+                    dataType: "json",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    success: function(d) {
+                        console.log(d);
+                    }
+                });
+            });
         };
 
         $(function() {
             handlingNameFilter();
-//            handlingClassFilter();
-//            handlingTypeFitler();
+            handlingClassFilter();
+            handlingTypeFitler();
             handlingCostFilter();
+            handlingSave();
         });
     }(window.jQuery, window, document));
 </script>

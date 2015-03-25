@@ -68,6 +68,13 @@ class UsersController < ApplicationController
     # respond_with({ :user => User.find(params[:user_id]), :cards => @cards})
   end
 
+  def add_cards
+    req = params[:cards]
+    respond_to do |format|
+      format.json { render json: { message: 'saved', data: req }}
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
