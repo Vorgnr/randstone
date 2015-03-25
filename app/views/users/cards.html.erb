@@ -25,6 +25,19 @@
     <option value="7">Weapon</option>
 </select>
 
+<select id="costFilter">
+    <option value="All">All</option>
+    <option value="0">0</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8+">8+</option>
+</select>
+
 <table>
     <thead>
     <tr>
@@ -51,12 +64,12 @@
             <td><%= card.set %></td>
             <td><%= card.quality %></td>
             <td class="card-type"><%= card.type_id %></td>
-            <td><%= card.cost %></td>
+            <td class="card-cost"><%= card.cost %></td>
             <td><%= card.health %></td>
             <td><%= card.attack %></td>
             <td><%= card.faction %></td>
             <td class="card-class"><%= card.class_id %></td>
-            <td><%= card.name %></td>
+            <td class="card-name"><%= card.name %></td>
             <td><%= card.description %></td>
             <td><%= card.popularity %></td>
         </tr>
@@ -64,20 +77,49 @@
     </tbody>
 </table>
 
-<br>
-
-<%= link_to 'New Card', new_card_path %>
-
 <script>
     (function($, window, document) {
 
-        var handlingNameFilter = function() {
-            $('#nameFilter').keyup(function() {
-                $.each($('tr.card-line'), function(i, val) {
-                    if ($(val).text().indexOf($(this).val()) == -1)
-                        $('tr.card-line').eq(i).hide();
+        var filters = [];
+        var costFilter = function(selectedValue, element) {
+            return selectedValue === "All" || element === selectedValue || (selectedValue === "8+" && parseInt(element) >= 8)
+        };
+
+        var contains = function(selectedValue, element) {
+            return element.indexOf(selectedValue) > -1;
+        };
+
+        var applyFilters = function(selectedValue, element) {
+            var result = true;
+            filters.forEach(function(f) {
+                if(!f(selectedValue, element)){
+                    result = false;
+                    return;
+                }
+            });
+            return result;
+        };
+
+        var addFilter = function(filter) {
+            if(filters.indexOf(filter) == -1)
+                filters.push(filter);
+        };
+
+        var removeFilter = function(filter) {
+            var index = filters.indexOf(filter);
+            if(~index){
+                filters.splice(index, 1);
+            }
+        };
+
+        var handlingFilters = function(selectorId, eventName, filter, element, parent){
+            $(selectorId).on(eventName, function() {
+                addFilter(filter);
+                $.each($(element), function(i, val) {
+                    if (applyFilters($(this).val(), $(val).text()))
+                        $(val).parent(parent).show();
                     else
-                        $('tr.card-line').eq(i).show();
+                        $(val).parent(parent).hide();
                 }.bind(this));
             });
         };
@@ -91,11 +133,19 @@
                         $(e).parent(parent).hide();
                 }.bind(this));
             });
-        }
+        };
+
+        var handlingNameFilter = function() {
+            handlingFilters('#nameFilter', 'keyup', contains , 'td.card-name', 'tr');
+        };
 
         var handlingClassFilter = function() {
-            selectFilter('#classFilter', 'td.card-class', 'tr');
+            //handlingFilters('#classFilter', 'change',  , 'td.card-class', 'tr');
         };
+
+        var handlingCostFilter = function() {
+            handlingFilters('#costFilter', 'change', costFilter, 'td.card-cost', 'tr');
+        }
 
         var handlingTypeFitler = function() {
             selectFilter('#typeFilter', 'td.card-type', 'tr');
@@ -103,8 +153,9 @@
 
         $(function() {
             handlingNameFilter();
-            handlingClassFilter();
-            handlingTypeFitler();
+//            handlingClassFilter();
+//            handlingTypeFitler();
+            handlingCostFilter();
         });
     }(window.jQuery, window, document));
 </script>

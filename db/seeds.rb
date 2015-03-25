@@ -17,6 +17,8 @@ json.each do |c|
     :health => c['health'],
     :attack => c['attack'],
     :class_id => c['classs'],
+    :faction => c['faction'],
+    :cost => c['cost'],
     :elite => c['elite'],
     :collectible => c['collectible'],
     :description => c['description'],
