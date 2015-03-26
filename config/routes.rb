@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   resources :users do
     get '/cards', to: 'users#cards'
-    post '/add_cards', to: 'users#add_cards'
+    post '/add_card', to: 'users#add_card'
+    post '/delete_card', to: 'users#delete_card'
   end
   resources :cards
 

@@ -64,17 +64,29 @@ class UsersController < ApplicationController
 
   def cards
     @user =  User.find(params[:user_id])
-    @cards = Card.all
-    @test = Card
-      .joins("LEFT OUTER JOIN cards_users on cards_users.card_id = cards.id")
-      .group("cards.id, cards.name")
-      .count("cards_users.card_id", :conditions => "cards_users.user_id = #{params[:user_id]}")
+    cards = Card.all + @user.cards
+    @cards = Hash[cards.uniq.map{ |i| [i, cards.count(i) - 1] }]
   end
 
-  def add_cards
-    req = params[:cards]
+  def add_card
+    @user =  User.find(params[:user_id])
+    @card = Card.find(params[:card_id])
+
+    @user.cards << @card
+
     respond_to do |format|
-      format.json { render json: { message: 'saved', data: req }}
+      format.json { render json: {  message: 'saved' } }
+    end
+  end
+
+  def delete_card
+    @user =  User.find(params[:user_id])
+    @card = Card.find(params[:card_id])
+
+    @user.cards.delete(@card)
+
+    respond_to do |format|
+      format.json { render json: {  message: 'deleted' } }
     end
   end
 

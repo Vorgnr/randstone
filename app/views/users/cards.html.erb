@@ -1,5 +1,3 @@
-<%= @test.inspect %>
-
 <h1><%= @user.name %>'s collection</h1>
 
 <label>Name filter</label>
@@ -46,8 +44,6 @@
     <option value="8+">8+</option>
 </select>
 
-<input id="saveButton" type="button" value="save"/>
-
 <table>
     <thead>
     <tr>
@@ -62,13 +58,14 @@
         <th>Name</th>
         <th>Description</th>
         <th>Popularity</th>
+        <th>In possession</th>
         <th><input id="addAllCards" type="button" value="Add All"/></th>
         <th colspan="3"></th>
     </tr>
     </thead>
 
     <tbody>
-    <% @cards.each do |card| %>
+    <% @cards.each do |card, count| %>
         <tr class="card-line">
             <input type="hidden" value="<%= card.id %>"/>
             <td class="card-set"><%= card.set %></td>
@@ -82,7 +79,11 @@
             <td class="card-name"><%= card.name %></td>
             <td><%= card.description %></td>
             <td><%= card.popularity %></td>
+            <td class="card-count"><%= count %></td>
             <td><input data-role="add-card" type="button" value="+"/></td>
+            <% if count > 0 %>
+                <td class="delete-card"><input data-role="delete-card" type="button" value="-"/></td>
+            <% end %>
         </tr>
     <% end %>
     </tbody>
@@ -136,34 +137,68 @@
         var getCardToSave = function() {
             return $('tr:visible.card-line').map(function(i, e) {
                 return parseInt($(e).children('input[type=hidden]').val());
-            });
+            }).get();
         };
 
         var handlingCardAdd = function() {
             $('input[data-role=add-card]').click(function() {
-                console.log($(this).closest('tr').children('input[type=hidden]').val());
+                var cardId = $(this).closest('tr').children('input[type=hidden]').val();
+                var count =  $(this).closest('tr').children('td.card-count');
+                var deleteColumn = $(this).closest('tr').children('td.delete-card')
+
+                $.ajax({
+                    type: "POST",
+                    url: '<%= user_add_card_path %>',
+                    data: JSON.stringify({ card_id:  cardId }),
+                    dataType: "json",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    success: function() {
+                        count.text(parseInt(count.text()) + 1);
+                        deleteColumn.show();
+                    }
+                });
+            });
+        };
+
+        var handlingDeleteCard = function() {
+            $('input[data-role=delete-card]').click(function() {
+                var cardId = $(this).closest('tr').children('input[type=hidden]').val();
+                var count =  $(this).closest('tr').children('td.card-count');
+                var deleteColumn = $(this).closest('tr').children('td.delete-card')
+
+                $.ajax({
+                    type: "POST",
+                    url: '<%= user_delete_card_path %>',
+                    data: JSON.stringify({ card_id:  cardId }),
+                    dataType: "json",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    success: function() {
+                        count.text(parseInt(count.text()) - 1);
+                        if(count.text() == "0")
+                            deleteColumn.hide();
+                    }
+                });
             });
         };
 
         var addAll = function() {
             $('#addAllCards').click(function() {
-                console.log(getCardToSave());
-            });
-        }
-
-        var handlingSave = function() {
-            $('#saveButton').click(function() {
                 $.ajax({
                     type: "POST",
-                    url: '<%= user_add_cards_path %>',
-                    data: JSON.stringify({ cards:  getCardToSave() }),
+                    url: '<%= user_add_card_path %>',
+                    data: JSON.stringify({ card_id:  getCardToSave() }),
                     dataType: "json",
                     headers: {
                         "Content-Type": "application/json",
                         "Accept": "application/json"
                     },
                     success: function(d) {
-                        console.log(d);
                     }
                 });
             });
@@ -175,8 +210,8 @@
             handlingTypeFilter();
             handlingCostFilter();
             handlingSetFilter();
-            handlingSave();
             handlingCardAdd();
+            handlingDeleteCard();
             addAll();
         });
     }(window.jQuery, window, document));
