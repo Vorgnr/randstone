@@ -27,5 +27,7 @@ json.each do |c|
   })
 end
 
-User.create(name: 'Sebastien')
-User.create(name: 'Arnaud', cards: [Card.new(id: 5)])
+baseCards = Card.where(set: 2)
+twiceBaseCards = baseCards + baseCards
+User.create(name: 'Arnaud', cards: twiceBaseCards)
+User.create(name: 'Sebastien', cards: twiceBaseCards)

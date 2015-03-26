@@ -65,7 +65,10 @@ class UsersController < ApplicationController
   def cards
     @user =  User.find(params[:user_id])
     @cards = Card.all
-    # respond_with({ :user => User.find(params[:user_id]), :cards => @cards})
+    @test = Card
+      .joins("LEFT OUTER JOIN cards_users on cards_users.card_id = cards.id")
+      .group("cards.id, cards.name")
+      .count("cards_users.card_id", :conditions => "cards_users.user_id = #{params[:user_id]}")
   end
 
   def add_cards
