@@ -6,7 +6,7 @@ class DecksController < ApplicationController
 
   def new
     if @user.current_deck_id == nil
-      @deck = Deck.create(status: "pick_opponent", user_id: @user.id)
+      @deck = Deck.create(user_id: @user.id)
       @user.update_attribute(:current_deck_id, @deck.id)
     else
       set_deck()
