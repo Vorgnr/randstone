@@ -75,7 +75,7 @@
             <td><%= card.health %></td>
             <td><%= card.attack %></td>
             <td><%= card.faction %></td>
-            <td class="card-class"><%= card.class_id %></td>
+            <td class="card-hero"><%= card.hero_id %></td>
             <td class="card-name"><%= card.name %></td>
             <td><%= card.description %></td>
             <td><%= card.popularity %></td>
@@ -119,7 +119,7 @@
         };
 
         var handlingClassFilter = function() {
-            handlingFilters('#classFilter', 'change',  typeFilter, 'td.card-class', 'tr');
+            handlingFilters('#classFilter', 'change',  typeFilter, 'td.card-hero', 'tr');
         };
 
         var handlingCostFilter = function() {

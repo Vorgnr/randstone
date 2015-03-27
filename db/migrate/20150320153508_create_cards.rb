@@ -8,7 +8,7 @@ class CreateCards < ActiveRecord::Migration
       t.integer :health
       t.integer :attack
       t.integer :faction
-      t.integer :class_id
+      t.integer :hero_id
       t.integer :elite
       t.integer :collectible
       t.string :name
