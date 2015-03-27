@@ -5,7 +5,7 @@ class DecksController < ApplicationController
   end
 
   def new
-    if @user.current_deck_id == nil
+    if !@user.has_pending_deck?
       @deck = Deck.create(user_id: @user.id)
       @user.update_attribute(:current_deck_id, @deck.id)
     else

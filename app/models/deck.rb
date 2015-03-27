@@ -9,4 +9,8 @@ class Deck < ActiveRecord::Base
   def defaults
     self.status = 'pick_opponent'
   end
+
+  def set_opponent(opponent_id)
+    self.update_attributes(:status => "pick_hero", :opponent_id => opponent_id)
+  end
 end
