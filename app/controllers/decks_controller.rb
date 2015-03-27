@@ -15,7 +15,9 @@ class DecksController < ApplicationController
     if @deck.pick_opponent?
       set_opponents()
     elsif @deck.pick_hero?
-      set_heros()
+      set_heroes()
+    elsif @deck.hero_picked?
+      @heroes = Hero.find([@deck.hero_a_id, @deck.hero_b_id, @deck.hero_c_id])
     end
   end
 
@@ -40,10 +42,22 @@ class DecksController < ApplicationController
       @user = User.find(params[:user_id])
     end
 
-    def set_heros
-    end
-
     def set_opponents
       @opponents = User.where.not(id: @user.id)
+    end
+
+    def set_heroes
+      @heroes = random_heroes(Hero.all)
+      @deck.update_attributes(
+        :status => 'hero_picked',
+        :hero_a_id => @heroes[0].id,
+        :hero_b_id => @heroes[1].id,
+        :hero_c_id => @heroes[2].id,
+      )
+    end
+
+    def random_heroes(heroes)
+      heroes = heroes.shuffle
+      return [heroes[0], heroes[1], heroes[3]]
     end
 end

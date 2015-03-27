@@ -46,6 +46,12 @@ ActiveRecord::Schema.define(version: 20150327105336) do
     t.integer  "class_id",    limit: 4
     t.integer  "status",      limit: 4
     t.integer  "opponent_id", limit: 4
+    t.integer  "card_a_id",   limit: 4
+    t.integer  "card_b_id",   limit: 4
+    t.integer  "card_c_id",   limit: 4
+    t.integer  "hero_a_id",   limit: 4
+    t.integer  "hero_b_id",   limit: 4
+    t.integer  "hero_c_id",   limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.integer  "user_id",     limit: 4
