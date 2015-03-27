@@ -1,0 +1,36 @@
+<h2>Pick opponent</h2>
+
+<%= select("opponent", "id", @opponents.collect {|u| [u.name, u.id]}, {:include_blank => 'None'}) %>
+
+<p>
+    <input id="addOpponent" type="button" value="next">
+</p>
+
+<script>
+    (function($, window, document) {
+
+        var handlingPickOpponent = function() {
+            $('#addOpponent').click(function() {
+                var opponentId = $('#opponent_id').val();
+                $.ajax({
+                    type: "POST",
+                    url: '<%= user_decks_new_add_opponent_path %>',
+                    data: JSON.stringify({ opponent_id:  opponentId }),
+                    dataType: "json",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    success: function() {
+                        $('#status-container').html("<%= j render(:partial => 'pick_hero') %>");
+                    }
+                });
+            });
+        };
+
+        $(function() {
+            handlingPickOpponent();
+        });
+
+    }(window.jQuery, window, document));
+</script>

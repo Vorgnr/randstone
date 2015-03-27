@@ -3,7 +3,8 @@ class CreateDecks < ActiveRecord::Migration
     create_table :decks do |t|
       t.string :name
       t.integer :class_id
-      t.string :state
+      t.integer :status
+      t.integer :opponent_id
 
       t.timestamps null: false
     end

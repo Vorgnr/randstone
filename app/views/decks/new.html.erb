@@ -1,0 +1,11 @@
+<h1>Creating deck</h1>
+
+<div id="status-container">
+    <% if @deck.pick_opponent? %>
+        <%= render partial: @deck.status, object: @opponents %>
+    <% elsif @deck.pick_hero? %>
+        <%= render partial: @deck.status, object: @heros %>
+    <% elsif @deck.pick_cards? %>
+        <%= render partial: @deck.status, object: @cards %>
+    <% end %>
+</div>
