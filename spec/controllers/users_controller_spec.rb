@@ -15,7 +15,7 @@ RSpec.describe UsersController, type: :controller do
       expect(response).to be_success
     end
 
-    it "respond with a 200 http status" do
+    it 'respond with a 200 http status' do
       expect(response).to have_http_status(200)
     end
   end
@@ -27,11 +27,11 @@ RSpec.describe UsersController, type: :controller do
       expect(response).to be_success
     end
 
-    it "respond with a 200 http status" do
+    it 'respond with a 200 http status' do
       expect(response).to have_http_status(200)
     end
 
-    it "assigns user" do
+    it 'assigns user' do
       expect(assigns(:user)).to eq(user)
     end
   end
@@ -43,11 +43,11 @@ RSpec.describe UsersController, type: :controller do
       expect(response).to be_success
     end
 
-    it "respond with a 200 http status" do
+    it 'respond with a 200 http status' do
       expect(response).to have_http_status(200)
     end
 
-    it "assigns new instance of user" do
+    it 'assigns new instance of user' do
       expect(assigns(:user)).to be_a User
     end
   end

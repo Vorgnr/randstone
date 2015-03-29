@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(version: 20150327105336) do
     t.integer  "user_id",     limit: 4
   end
 
-  create_table "heros", force: :cascade do |t|
+  create_table "heroes", force: :cascade do |t|
     t.string   "name",       limit: 255
     t.string   "class_name", limit: 255
     t.integer  "remote_id",  limit: 4

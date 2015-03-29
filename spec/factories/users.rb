@@ -1,11 +1,9 @@
 FactoryGirl.define do
   factory :user do
-    name "John"
-    current_deck_id nil
-  end
+    name 'John'
 
-  factory :user_with_pending_deck do
-    name "John"
-    current_deck_id 5
+    factory :user_with_current_deck do
+      association :current_deck, factory: :deck
+    end
   end
 end

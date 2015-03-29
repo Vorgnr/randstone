@@ -6,8 +6,7 @@ class DecksController < ApplicationController
 
   def new
     if !@user.has_pending_deck?
-      @deck = Deck.create(user_id: @user.id)
-      @user.update_attribute(:current_deck_id, @deck.id)
+      @deck = @user.create_deck
     else
       set_deck()
     end
@@ -35,7 +34,7 @@ class DecksController < ApplicationController
 
   private
     def set_deck
-      @deck = Deck.find(@user.current_deck_id)
+      @deck = @user.current_deck
     end
 
     def set_user
