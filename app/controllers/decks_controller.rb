@@ -22,9 +22,12 @@ class DecksController < ApplicationController
 
   def add_opponent
     set_deck()
-    @deck.update_attributes(:status => "pick_hero", :opponent_id => params[:opponent_id])
+    puts @user.inspect
+    puts @deck.inspect
+    @deck.update_attributes(:status => 'pick_hero', :opponent_id => params[:opponent][:id])
 
     respond_to do |format|
+      format.html { redirect_to new_user_deck_path }
       format.json { render json: {  message: 'Opponent added', deck_status: @deck.status } }
     end
   end
@@ -46,13 +49,8 @@ class DecksController < ApplicationController
     end
 
     def set_heroes
-      @heroes = random_heroes(Hero.all)
-      @deck.update_attributes(
-        :status => 'hero_picked',
-        :hero_a_id => @heroes[0].id,
-        :hero_b_id => @heroes[1].id,
-        :hero_c_id => @heroes[2].id,
-      )
+      @heroes = Hero.all
+      @deck.pick_heroes(@heroes[0].id, @heroes[1].id, @heroes[2].id)
     end
 
     def random_heroes(heroes)

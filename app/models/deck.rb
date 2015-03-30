@@ -13,4 +13,13 @@ class Deck < ActiveRecord::Base
   def set_opponent(opponent_id)
     self.update_attributes(:status => 'pick_hero', :opponent_id => opponent_id)
   end
+
+  def pick_heroes(hero_a_id, hero_b_id, hero_c_id)
+    self.update_attributes(
+        :status => 'hero_picked',
+        :hero_a_id => hero_a_id,
+        :hero_b_id => hero_b_id,
+        :hero_c_id => hero_c_id,
+    )
+  end
 end

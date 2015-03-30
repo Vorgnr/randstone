@@ -21,4 +21,24 @@ RSpec.describe Deck, type: :model do
       expect(deck.status).to eq('pick_hero')
     end
   end
+
+  describe '#pick_heroes' do
+    it 'should set status to hero_picked  ' do
+      hero_a = create(:hero)
+      hero_b = create(:hero)
+      hero_c = create(:hero)
+      deck.pick_heroes(hero_a, hero_b, hero_c)
+      expect(deck.hero_picked?).to be true
+    end
+
+    it 'should set deck\'s heroes' do
+      hero_a = create(:hero)
+      hero_b = create(:hero)
+      hero_c = create(:hero)
+      deck.pick_heroes(hero_a.id, hero_b.id, hero_c.id)
+      expect(deck.hero_a_id).to eq hero_a.id
+      expect(deck.hero_b_id).to eq hero_b.id
+      expect(deck.hero_c_id).to eq hero_c.id
+    end
+  end
 end

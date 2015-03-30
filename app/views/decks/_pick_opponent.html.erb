@@ -1,10 +1,9 @@
 <h2>Pick opponent</h2>
 
-<%= select("opponent", "id", @opponents.collect {|u| [u.name, u.id]}, {:include_blank => 'None'}) %>
-
-<p>
-    <input id="addOpponent" type="button" value="next">
-</p>
+<%= form_tag(user_decks_new_add_opponent_path, method: 'post') do %>
+    <%= select("opponent", "id", @opponents.collect {|u| [u.name, u.id]}, {:include_blank => 'None'}) %>
+    <input id="addOpponent" type="submit" value="next">
+<% end %>
 
 <script>
     (function($, window, document) {
@@ -22,14 +21,14 @@
                         "Accept": "application/json"
                     },
                     success: function() {
-                        $('#status-container').html("<%= j render(:partial => 'pick_hero') %>");
+                        $('#status-container').html("");
                     }
                 });
             });
         };
 
         $(function() {
-            handlingPickOpponent();
+            //handlingPickOpponent();
         });
 
     }(window.jQuery, window, document));
