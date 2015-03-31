@@ -41,4 +41,22 @@ RSpec.describe Deck, type: :model do
       expect(deck.hero_c_id).to eq hero_c.id
     end
   end
+
+  describe '.current_users_deck' do
+    context 'when user does have one' do
+      it 'should return user\'s deck ' do
+        user_with_uncompleted_deck = create(:user, :with_uncompleted_deck)
+        users_deck = Deck.current_users_deck(user_with_uncompleted_deck.id)
+        expect(users_deck).to be_a Deck
+        expect(users_deck.completed?).to be false
+      end
+    end
+
+    context 'when user does not have one' do
+      it 'should return nil ' do
+        user = create(:user)
+        expect(Deck.current_users_deck(user.id)).to be nil
+      end
+    end
+  end
 end

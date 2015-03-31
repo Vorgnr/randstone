@@ -1,5 +1,5 @@
 class Hero < ActiveRecord::Base
-  has_and_belongs_to_many :decks
+  # has_and_belongs_to_many :decks
 
   def self.random_trio
     heroes = self.all

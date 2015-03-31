@@ -2,12 +2,16 @@ FactoryGirl.define do
   factory :user do
     name 'John'
 
-    factory :user_with_current_deck do
-      association :current_deck, factory: :deck
+    trait :with_uncompleted_deck do
+      after(:create) do |user|
+        user.decks << create(:deck_uncompleted)
+      end
     end
 
-    factory :user_with_current_deck_and_pick_hero do
-      association :current_deck, factory: :deck_with_picked_heroes
+    trait :with_completed_deck do
+      after(:create) do |user|
+        user.decks << create(:deck_completed)
+      end
     end
   end
 end

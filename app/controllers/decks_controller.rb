@@ -5,11 +5,9 @@ class DecksController < ApplicationController
   end
 
   def new
-    if !@user.has_pending_deck?
-      @deck = @user.create_deck
-    else
-      set_deck()
-    end
+    @deck = Deck.current_users_deck(@user.id)# || @user.create_deck
+    puts @deck.pretty_inspect
+=begin
 
     if @deck.pick_opponent?
       set_opponents()
@@ -18,17 +16,18 @@ class DecksController < ApplicationController
     elsif @deck.hero_picked?
       @heroes = Hero.find([@deck.hero_a_id, @deck.hero_b_id, @deck.hero_c_id])
     end
+=end
   end
 
   def add_opponent
-    set_deck()
-    puts @user.inspect
-    puts @deck.inspect
-    @deck.update_attributes(:status => 'pick_hero', :opponent_id => params[:opponent][:id])
-
-    respond_to do |format|
-      format.html { redirect_to new_user_deck_path }
-      format.json { render json: {  message: 'Opponent added', deck_status: @deck.status } }
+    @deck = @user.current_deck || @user.create_deck
+    puts @deck.pretty_inspect
+    if @deck.update_attribute(:status, 'pick_hero')
+    # if @deck.update_attributes(status: :pick_hero, :opponent_id => params[:opponent][:id])
+      puts @deck.pretty_inspect
+      redirect_to new_user_deck_path
+    else
+      puts 'paf'
     end
   end
 
@@ -36,9 +35,6 @@ class DecksController < ApplicationController
   end
 
   private
-    def set_deck
-      @deck = @user.current_deck
-    end
 
     def set_user
       @user = User.find(params[:user_id])

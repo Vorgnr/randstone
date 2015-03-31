@@ -1,5 +1,7 @@
 <h1>Creating deck</h1>
 
+<p><%= @deck.pretty_inspect %></p>
+
 <div id="status-container">
     <% if @deck.pick_opponent? %>
         <%= render partial: @deck.status, object: @opponents %>

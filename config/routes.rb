@@ -1,12 +1,12 @@
 Rails.application.routes.draw do
-  resources :users do
-    get '/cards', to: 'users#cards'
-    post '/add_card', to: 'users#add_card'
-    post '/delete_card', to: 'users#delete_card'
-    resources :decks
-    post 'decks/new/add_opponent', to: 'decks#add_opponent'
-    post 'decks/new/add_hero', to: 'decks#add_hero'
-  end
+resources :users do
+  get '/cards', to: 'users#cards'
+  post '/add_card', to: 'users#add_card'
+  post '/delete_card', to: 'users#delete_card'
+  resources :decks
+  post 'decks/new/add_opponent', to: 'decks#add_opponent'
+  post 'decks/new/add_hero', to: 'decks#add_hero'
+end
 
   resources :cards
   # The priority is based upon order of creation: first created -> highest priority.

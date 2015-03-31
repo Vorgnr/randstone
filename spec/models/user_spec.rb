@@ -1,19 +1,34 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  let(:user_with_uncompleted_deck) { create(:user, :with_uncompleted_deck) }
+  let(:user_with_completed_deck) { create(:user, :with_completed_deck) }
   let(:user) { create(:user) }
-  let(:user_with_current_deck) { create(:user_with_current_deck) }
 
   describe '#has_pending_deck?' do
-    context 'when current_deck_id is nil' do
+    context 'when user is not building deck' do
       it 'should be false' do
-        expect(user.has_pending_deck?).to be false
+        expect(user_with_completed_deck.has_pending_deck?).to be false
       end
     end
 
-    context 'when current_deck_id is not nil' do
+    context 'when user is building deck' do
       it 'should be true' do
-        expect(user_with_current_deck.has_pending_deck?).to be true
+        expect(user_with_uncompleted_deck.has_pending_deck?).to be true
+      end
+    end
+  end
+
+  describe '#current_deck' do
+    context 'when user is not building deck' do
+      it 'should return nil' do
+        expect(user_with_completed_deck.current_deck).to be_nil
+      end
+    end
+
+    context 'when user is building deck' do
+      it 'should return deck' do
+        expect(user_with_uncompleted_deck.has_pending_deck?).to be true
       end
     end
   end
