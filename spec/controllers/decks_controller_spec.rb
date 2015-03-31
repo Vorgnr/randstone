@@ -2,30 +2,63 @@ require 'rails_helper'
 
 RSpec.describe DecksController, type: :controller do
   let(:user) { create(:user) }
-  let(:user_with_current_deck) { create(:user_with_current_deck) }
-  let(:user_with_current_deck_and_pick_hero) { create(:user_with_current_deck_and_pick_hero) }
+  let(:user_with_pick_hero_deck) { create(:user, :with_pick_hero_deck) }
+  let(:user_with_hero_picked_deck) { create(:user, :with_heroes_picked_deck) }
 
-  # describe '#new' do
-  #   context 'when user has no pending deck' do
-  #     it 'should create @deck' do
-  #       get :new, user_id: user.id
-  #       expect(assigns(:deck)).to be #
-  #     end
-  #   end
-  #
-  #   context 'when user has pending deck' do
-  #     it 'should find the deck' do
-  #       get :new, user_id: user_with_current_deck.id
-  #       expect(assigns(:deck)).to eq user_with_current_deck.current_deck
-  #     end
-  #   end
-  #
-  #   context "when user's deck's status is pick_hero" do
-  #     it 'should set 3 random heroes' do
-  #       get :new, user_id: user_with_current_deck_and_pick_hero.id
-  #       puts user_with_current_deck_and_pick_hero.current_deck.pick_hero?
-  #       # expect(assigns(:heroes)).to eq 3
-  #     end
-  #   end
-  # end
+  describe '#new' do
+    context 'when user has no pending deck' do
+      it 'should create @deck' do
+        get :new, user_id: user.id
+        expect(assigns(:deck)).to be
+      end
+
+      it "@deck's status should be pick_opponent" do
+        get :new, user_id: user.id
+        expect(assigns(:deck).pick_opponent?).to be true
+      end
+    end
+
+    context 'when user has deck with pick_hero status' do
+      context 'and there is not at least 3 heroes in db' do
+        it 'should raise error' do
+          expect {
+            get :new, user_id: user_with_pick_hero_deck.id
+          }.to raise_error
+        end
+      end
+
+      context 'and there is sufficient amount of heroes' do
+        it 'should assign heroes' do
+          9.times.map { create(:hero) }
+          get :new, user_id: user_with_pick_hero_deck.id
+          expect(assigns(:heroes).all? { |h| h.is_a? Hero }).to be true
+        end
+
+        it 'should set @deck status to hero_picked' do
+          9.times.map { create(:hero) }
+          get :new, user_id: user_with_pick_hero_deck.id
+          expect(assigns(:deck).hero_picked?).to be true
+        end
+
+        it "should @deck's heroes' id" do
+          9.times.map { create(:hero) }
+          get :new, user_id: user_with_pick_hero_deck.id
+          expect(assigns(:heroes)[0].id).to eq assigns(:deck).hero_a_id
+          expect(assigns(:heroes)[1].id).to eq assigns(:deck).hero_b_id
+          expect(assigns(:heroes)[2].id).to eq assigns(:deck).hero_c_id
+        end
+      end
+    end
+
+    # Todo - Improve model
+    context 'when user has deck with hero picked status' do
+      it 'should assign @heroes' do
+        Hero.create(id: 1)
+        Hero.create(id: 2)
+        Hero.create(id: 3)
+        get :new, user_id: user_with_hero_picked_deck.id
+        expect(assigns(:heroes).all? { |h| h.is_a? Hero }).to be true
+      end
+    end
+  end
 end

@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :hero do
-    name 'jean'
+    name ('a'..'z').to_a.shuffle.join
   end
 end
