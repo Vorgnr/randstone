@@ -3,6 +3,7 @@ class CreateCardSelections < ActiveRecord::Migration
     create_table :card_selections do |t|
       t.string :values
       t.integer :deck_id
+      t.boolean :is_consumed
 
       t.timestamps null: false
     end

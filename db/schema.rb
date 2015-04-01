@@ -14,10 +14,11 @@
 ActiveRecord::Schema.define(version: 20150401121239) do
 
   create_table "card_selections", force: :cascade do |t|
-    t.string   "values",     limit: 255
-    t.integer  "deck_id",    limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "values",      limit: 255
+    t.integer  "deck_id",     limit: 4
+    t.boolean  "is_consumed", limit: 1
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "cards", force: :cascade do |t|
