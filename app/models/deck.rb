@@ -14,13 +14,10 @@ class Deck < ActiveRecord::Base
     self.update_attributes(:status => 'pick_hero', :opponent_id => opponent_id)
   end
 
-  def pick_heroes(hero_a_id, hero_b_id, hero_c_id)
-    self.update_attributes(
-        :status => 'hero_picked',
-        :hero_a_id => hero_a_id,
-        :hero_b_id => hero_b_id,
-        :hero_c_id => hero_c_id,
-    )
+  def pick_heroes(heroes)
+    heroes = heroes.map { |h| h.id } if heroes.all? { |h| h.is_a? Hero }
+    HeroSelection.save_selection(self.id, heroes)
+    self.update_attributes(:status => 'hero_picked')
   end
 
   def set_hero(hero_id)

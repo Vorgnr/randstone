@@ -27,7 +27,7 @@ RSpec.describe Deck, type: :model do
       hero_a = create(:hero)
       hero_b = create(:hero)
       hero_c = create(:hero)
-      deck.pick_heroes(hero_a, hero_b, hero_c)
+      deck.pick_heroes([hero_a, hero_b, hero_c])
       expect(deck.hero_picked?).to be true
     end
 
@@ -35,10 +35,10 @@ RSpec.describe Deck, type: :model do
       hero_a = create(:hero)
       hero_b = create(:hero)
       hero_c = create(:hero)
-      deck.pick_heroes(hero_a.id, hero_b.id, hero_c.id)
-      expect(deck.hero_a_id).to eq hero_a.id
-      expect(deck.hero_b_id).to eq hero_b.id
-      expect(deck.hero_c_id).to eq hero_c.id
+      deck.pick_heroes([hero_a, hero_b, hero_c])
+      heroSelection = HeroSelection.find_by(deck_id: deck.id)
+      expect(heroSelection).to be_a HeroSelection
+      expect(heroSelection.values).to eq [hero_a.id, hero_b.id, hero_c.id]
     end
   end
 

@@ -8,9 +8,6 @@ class CreateDecks < ActiveRecord::Migration
       t.integer :card_a_id
       t.integer :card_b_id
       t.integer :card_c_id
-      t.integer :hero_a_id
-      t.integer :hero_b_id
-      t.integer :hero_c_id
 
       t.timestamps null: false
     end

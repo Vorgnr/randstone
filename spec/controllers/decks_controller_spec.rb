@@ -40,12 +40,10 @@ RSpec.describe DecksController, type: :controller do
           expect(assigns(:deck).hero_picked?).to be true
         end
 
-        it "should @deck's heroes' id" do
+        it "should set @deck's heroes' id" do
           9.times.map { create(:hero) }
           get :new, user_id: user_with_pick_hero_deck.id
-          expect(assigns(:heroes)[0].id).to eq assigns(:deck).hero_a_id
-          expect(assigns(:heroes)[1].id).to eq assigns(:deck).hero_b_id
-          expect(assigns(:heroes)[2].id).to eq assigns(:deck).hero_c_id
+          expect(assigns(:heroes).map {|h| h.id}).to eq HeroSelection.find_by(deck_id: assigns(:deck).id).values
         end
       end
     end
@@ -56,6 +54,8 @@ RSpec.describe DecksController, type: :controller do
         Hero.create(id: 1)
         Hero.create(id: 2)
         Hero.create(id: 3)
+        d = user_with_hero_picked_deck.current_deck
+        HeroSelection.save_selection(d.id, [1, 2, 3])
         get :new, user_id: user_with_hero_picked_deck.id
         expect(assigns(:heroes).all? { |h| h.is_a? Hero }).to be true
       end

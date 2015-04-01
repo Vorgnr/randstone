@@ -11,7 +11,8 @@ class DecksController < ApplicationController
     elsif @deck.pick_hero?
       set_heroes()
     elsif @deck.hero_picked?
-      @heroes = Hero.find([@deck.hero_a_id, @deck.hero_b_id, @deck.hero_c_id])
+      heroSelection = HeroSelection.find_by(deck_id: @deck.id)
+      @heroes = Hero.find(heroSelection.values)
     end
   end
 
@@ -43,6 +44,6 @@ class DecksController < ApplicationController
     def set_heroes
       @heroes = Hero.random_trio
       raise 'Not enough heroes in data base' unless @heroes.all? { |h| h.is_a? Hero }
-      @deck.pick_heroes(@heroes[0].id, @heroes[1].id, @heroes[2].id)
+      @deck.pick_heroes(@heroes)
     end
 end
