@@ -25,7 +25,10 @@ class DecksController < ApplicationController
 
   def add_hero
     raise "Unexpected deck's status" unless @deck.hero_picked?
-    raise "Hero can not be nil or empty" unless params[:hero]
+    raise "Hero can not be nil or empty" if !params[:hero] || params[:hero] == ''
+    if @deck.set_hero(params[:hero])
+      redirect_to new_user_deck_path
+    end
   end
 
   private

@@ -11,7 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150401091043) do
+ActiveRecord::Schema.define(version: 20150401121239) do
+
+  create_table "card_selections", force: :cascade do |t|
+    t.string   "values",     limit: 255
+    t.integer  "deck_id",    limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
 
   create_table "cards", force: :cascade do |t|
     t.integer  "set",         limit: 4
@@ -46,6 +53,7 @@ ActiveRecord::Schema.define(version: 20150401091043) do
     t.integer  "class_id",    limit: 4
     t.integer  "status",      limit: 4
     t.integer  "opponent_id", limit: 4
+    t.integer  "hero_id",     limit: 4
     t.integer  "card_a_id",   limit: 4
     t.integer  "card_b_id",   limit: 4
     t.integer  "card_c_id",   limit: 4

@@ -95,4 +95,51 @@ RSpec.describe DecksController, type: :controller do
       expect(assigns(:deck).opponent_id).to eq opponent.id
     end
   end
+
+  describe '#add_hero' do
+    context 'when !@deck.hero_picked?' do
+      it 'raise error' do
+        Hero.create(id: 1)
+        expect {
+          post :add_hero, 
+            user_id: user.id, 
+            :hero => 1
+        }.to raise_error("Unexpected deck's status")
+      end
+    end
+
+    context 'when hero params is nil' do
+      it 'raise error' do
+        Hero.create(id: 1)
+        expect {
+          post :add_hero, 
+            user_id: user_with_hero_picked_deck.id, 
+            :hero => nil
+        }.to raise_error('Hero can not be nil or empty')
+      end
+    end
+
+    context 'when hero params is empty' do
+      it 'raise error' do
+        Hero.create(id: 1)
+        expect {
+          post :add_hero, 
+            user_id: user_with_hero_picked_deck.id, 
+            :hero => ''
+        }.to raise_error('Hero can not be nil or empty')
+      end
+    end
+
+    it "should set @deck's status to pick_cards" do
+        Hero.create(id: 1)
+        post :add_hero, user_id: user_with_hero_picked_deck.id, :hero => 1
+        expect(assigns(:deck).status).to eq 'pick_cards'
+    end
+
+    it "should set @deck's hero" do
+      Hero.create(id: 1)
+      post :add_hero, user_id: user_with_hero_picked_deck.id, :hero => 1
+      expect(assigns(:deck).hero).to eq Hero.find(1)
+    end
+  end
 end

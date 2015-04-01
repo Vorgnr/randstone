@@ -1,6 +1,7 @@
 class Deck < ActiveRecord::Base
   belongs_to :user
   has_and_belongs_to_many :cards
+  belongs_to :hero
 
   enum status: [ :pick_opponent, :pick_hero, :hero_picked, :pick_cards, :completed ]
 
@@ -21,6 +22,7 @@ class Deck < ActiveRecord::Base
   end
 
   def set_hero(hero_id)
+    self.update_attributes(status: 'pick_cards', hero_id: hero_id)
   end
 
   def self.current_users_deck(user_id)
