@@ -23,6 +23,9 @@ class Deck < ActiveRecord::Base
     )
   end
 
+  def set_hero(hero_id)
+  end
+
   def self.current_users_deck(user_id)
     return Deck.where(user_id: user_id).where.not(status: 4).first
   end

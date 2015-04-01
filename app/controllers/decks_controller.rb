@@ -1,6 +1,6 @@
 class DecksController < ApplicationController
-  before_action :set_user, only: [:index, :new, :add_opponent]
-  before_action :set_deck, only: [:new, :add_opponent]
+  before_action :set_user, only: [:index, :new, :add_opponent, :add_hero]
+  before_action :set_deck, only: [:new, :add_opponent, :add_hero]
 
   def index
   end
@@ -16,14 +16,15 @@ class DecksController < ApplicationController
   end
 
   def add_opponent
-    if @deck.update_attributes(status: :pick_hero, :opponent_id => params[:opponent][:id])
+    raise "Unexpected deck's status" unless @deck.pick_opponent?
+    if @deck.set_opponent(params[:opponent][:id])
       redirect_to new_user_deck_path
-    else
-      puts 'paf'
     end
   end
 
   def add_hero
+    raise "Unexpected deck's status" unless @deck.hero_picked?
+    raise "Hero can not be nil or empty" unless params[:hero]
   end
 
   private

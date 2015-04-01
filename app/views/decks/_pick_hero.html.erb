@@ -1,5 +1,35 @@
 <h2>Pick heroes</h2>
 
-<div id="heroeslist">
-    <%= @heroes.inspect %>>
-</div>
+<p class="hero-alert" style="display:none;">
+    pls pick hero
+</p>
+
+<%= form_tag(user_decks_new_add_hero_path, method: 'post', id: 'heroPicker') do %>
+    <% @heroes.each do |hero| %>
+        <label><%= hero.name %></label>
+        <%= radio_button_tag 'hero', hero.id %>
+    <% end %>
+    <input id="pickHeroes" type="submit" value="next">
+<% end %>
+
+<script>
+    (function($, window, document) {
+        var validateHero = function() {
+            $('form#heroPicker').submit(function(e) {
+                var selectedHero = $('input:checked[name=hero]');
+                if(!selectedHero.length || !selectedHero.val().length) {
+                    e.preventDefault();
+                    warnUser();
+                }
+            })
+        };
+
+        var warnUser = function() {
+            $('p.hero-alert').show();
+        };
+
+        $(function() {
+            validateHero();
+        });
+    }(window.jQuery, window, document));
+</script>

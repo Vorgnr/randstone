@@ -61,4 +61,38 @@ RSpec.describe DecksController, type: :controller do
       end
     end
   end
+
+  describe '#add_opponent' do
+    context "when user's deck's status is not pick_opponent" do
+      it 'should raise error' do
+        expect {
+          post :add_opponent, 
+            user_id: user_with_hero_picked_deck.id, 
+            :opponent => { :id => "1" }
+        }.to raise_error
+      end
+    end
+
+    context "when opponent's id is empty" do
+      it "should set @deck's opponent_id to nil" do
+        opponent_id = ""
+        post :add_opponent, user_id: user.id, :opponent => { :id => opponent_id }
+        expect(assigns(:user).current_deck.opponent_id).to be nil
+      end
+    end
+
+    context "when opponent's id is nil" do
+      it "should set @deck's opponent_id to nil" do
+        opponent_id = nil
+        post :add_opponent, user_id: user.id, :opponent => { :id => opponent_id }
+        expect(assigns(:user).current_deck.opponent_id).to be nil
+      end
+    end
+
+    it "should update @deck's opponent" do
+      opponent = create(:user)
+      post :add_opponent, user_id: user.id, :opponent => { :id => opponent.id }
+      expect(assigns(:deck).opponent_id).to eq opponent.id
+    end
+  end
 end
