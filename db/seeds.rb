@@ -33,7 +33,7 @@ json.each do |c|
   Card.create({
     :id => c['id'],
     :set => c['set'],
-    :quality => c['quality'],
+    :quality => Card.i_to_quality(c['quality'].to_i),
     :type_id => c['type'],
     :health => c['health'],
     :attack => c['attack'],
@@ -52,3 +52,4 @@ baseCards = Card.where(set: 2)
 twiceBaseCards = baseCards + baseCards
 User.create(name: 'Arnaud', cards: twiceBaseCards)
 User.create(name: 'Sebastien', cards: twiceBaseCards)
+User.create(name: 'Bla')

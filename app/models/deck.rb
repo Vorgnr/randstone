@@ -28,4 +28,12 @@ class Deck < ActiveRecord::Base
   def self.current_users_deck(user_id)
     return Deck.where(user_id: user_id).where.not(status: 4).first
   end
+
+  def current_cards_selection
+    CardSelection.where(deck_id: self.id, is_consumed: false).first
+  end
+
+  def create_card_selection(cards)
+    CardSelection.save_selection(self.id, cards)
+  end
 end

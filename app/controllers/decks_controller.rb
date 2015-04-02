@@ -7,12 +7,22 @@ class DecksController < ApplicationController
 
   def new
     if @deck.pick_opponent?
-      set_opponents()
+      set_opponents
     elsif @deck.pick_hero?
-      set_heroes()
+      set_heroes
     elsif @deck.hero_picked?
-      heroSelection = HeroSelection.find_by(deck_id: @deck.id)
-      @heroes = Hero.find(heroSelection.values)
+      hero_selection = HeroSelection.find_by(deck_id: @deck.id)
+      @heroes = Hero.find(hero_selection.values)
+    elsif @deck.pick_cards?
+      card_selection = @deck.current_cards_selection
+      if !card_selection.nil?
+        cards = card_selection.values
+      else
+        # Todo Generate cards
+        cards = [36, 9, 22]
+        @deck.create_card_selection(@cards)
+      end
+      @cards = cards
     end
   end
 
@@ -25,7 +35,7 @@ class DecksController < ApplicationController
 
   def add_hero
     raise "Unexpected deck's status" unless @deck.hero_picked?
-    raise "Hero can not be nil or empty" if !params[:hero] || params[:hero] == ''
+    raise 'Hero can not be nil or empty' if !params[:hero] || params[:hero] == ''
     if @deck.set_hero(params[:hero])
       redirect_to new_user_deck_path
     end
