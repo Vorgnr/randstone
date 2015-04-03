@@ -59,4 +59,21 @@ RSpec.describe Deck, type: :model do
       end
     end
   end
+
+  describe '#current_cards_selection' do
+    it "should return deck's current card selection" do
+      cards = 3.times.map { create(:card) }
+      selection = CardSelection.save_selection(deck.id, cards.map { |c| c.id })
+      expect(deck.current_cards_selection).to eq selection
+    end
+  end
+
+  describe '#create_card_selection' do
+    it 'should create a card selection' do
+      cards = 3.times.map { create(:card) }
+      card_selection = deck.create_card_selection(cards.map { |c| c.id })
+      expect(card_selection).to eq deck.current_cards_selection
+      expect(card_selection.is_consumed).to be false
+    end
+  end
 end

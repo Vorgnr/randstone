@@ -70,5 +70,50 @@ RSpec.describe Card, type: :model do
         expect(Card.cards_to_draw(hero_id: hero.id).length).to eq 10
       end
     end
+
+    context 'when user_id is not nil' do
+      it "should return user's cards" do
+        user = create(:user)
+        user2 = create(:user)
+        cards = 2.times.map { create(:card) }
+        user.cards << cards + cards
+        user2.cards << cards
+        create(:card)
+        expect(Card.cards_to_draw(user_id: user.id).length).to eq 2
+      end
+    end
+
+    context 'when all parameters are set' do
+      it 'should return expected cards' do
+        hero = create(:hero)
+        user = create(:user)
+        bases = 5.times.map { create(:card, :with_base_quality) }
+        common = 5.times.map { create(:card, :with_common_quality) }
+        common_with_hero= 5.times.map { create(:card, :with_common_quality, hero: hero) }
+        epic = 5.times.map { create(:card, :with_epic_quality) }
+        epic_with_hero = 1.times.map { create(:card, :with_epic_quality, hero: hero) }
+        user.cards << [bases.first, common.first, common_with_hero.first, epic.first, epic_with_hero.first]
+        expect(Card.cards_to_draw(user_id: user.id, qualities: [0, 1], hero_id: hero.id).length).to eq 3
+      end
+    end
+  end
+
+  describe '.i_to_quality' do
+    it 'should convert integer to quality' do
+      expect(Card.random_to_quality(1)).to eq 5
+      expect(Card.random_to_quality(2)).to eq 4
+      expect(Card.random_to_quality(11)).to eq 3
+      expect(Card.random_to_quality(50)).to eq [0, 1]
+    end
+  end
+
+  describe '.clean_total' do
+    it 'should return expected clean total' do
+      expect(Card.clean_total(0)).to raise_error
+      expect(Card.clean_total(1)).to raise_error
+      expect(Card.clean_total(2)).to eq 1
+      expect(Card.clean_total(3)).to eq 1
+      expect(Card.clean_total(4)).to eq 2
+    end
   end
 end

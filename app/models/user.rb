@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
-  has_and_belongs_to_many :cards
+  has_many :collections
+  has_many :cards, through: :collections
+
   has_many :decks
 
   def has_pending_deck?
