@@ -1,5 +1,9 @@
 <h2>Pick cards</h2>
 
-<%= @cards %>
-
-<p><%= @deck.current_cards_selection.values %></p>
+<%= form_tag('user_decks_new_add_hero_path', method: 'post', id: 'cardsPicker') do %>
+    <% @cards.each do |card| %>
+        <label><%= card.name %></label>
+        <%= radio_button_tag 'card', card.id %>
+    <% end %>
+    <input id="pickCards" type="submit" value="next">
+<% end %>

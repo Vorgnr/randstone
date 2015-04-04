@@ -21,5 +21,10 @@ FactoryGirl.define do
       name 'deck_completed'
       status 'completed'
     end
+
+    factory :deck_pick_cards do
+      name 'deck_pick_cards'
+      status 'pick_cards'
+    end
   end
 end

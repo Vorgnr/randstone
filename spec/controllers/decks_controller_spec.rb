@@ -4,6 +4,7 @@ RSpec.describe DecksController, type: :controller do
   let(:user) { create(:user) }
   let(:user_with_pick_hero_deck) { create(:user, :with_pick_hero_deck) }
   let(:user_with_hero_picked_deck) { create(:user, :with_heroes_picked_deck) }
+  let(:user_with_pick_cards_deck) { create(:user, :with_pick_cards_deck) }
 
   describe '#new' do
     context 'when user has no pending deck' do
@@ -58,6 +59,26 @@ RSpec.describe DecksController, type: :controller do
         HeroSelection.save_selection(d.id, [1, 2, 3])
         get :new, user_id: user_with_hero_picked_deck.id
         expect(assigns(:heroes).all? { |h| h.is_a? Hero }).to be true
+      end
+    end
+
+    context 'when user has deck with pick_cards status' do
+      context 'when @desk has no current card selection' do
+        it 'should assign @cards' do
+          cards = 3.times.map { create(:card) }
+          user_with_pick_cards_deck.cards << cards
+          get :new, user_id: user_with_pick_cards_deck.id
+          expect(assigns(:cards).length).to eq 3
+        end
+      end
+      context 'when @desk has current card selection' do
+        it 'should assign @cards' do
+          cards = 3.times.map { create(:card) }
+          user_with_pick_cards_deck.cards << cards
+          user_with_pick_cards_deck.current_deck.create_card_selection(cards.map { |c| c.id })
+          get :new, user_id: user_with_pick_cards_deck.id
+          expect(assigns(:cards).length).to eq 3
+        end
       end
     end
   end

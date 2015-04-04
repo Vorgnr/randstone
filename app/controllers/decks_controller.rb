@@ -16,13 +16,11 @@ class DecksController < ApplicationController
     elsif @deck.pick_cards?
       card_selection = @deck.current_cards_selection
       if !card_selection.nil?
-        cards = card_selection.values
+        @cards = Card.find(card_selection.values)
       else
-        # Todo Generate cards
-        cards = [36, 9, 22]
-        @deck.create_card_selection(@cards)
+        @cards = Card.get_trio(user_id: @user.id, opponent_id: @deck.opponent_id, hero_id: @deck.hero_id)
+        @deck.create_card_selection(@cards.map { |c| c.id })
       end
-      @cards = cards
     end
   end
 

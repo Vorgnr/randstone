@@ -25,5 +25,11 @@ FactoryGirl.define do
         user.decks << create(:deck_with_heroes_picked)
       end
     end
+
+    trait :with_pick_cards_deck do
+      after(:create) do |user|
+        user.decks << create(:deck_pick_cards)
+      end
+    end
   end
 end
