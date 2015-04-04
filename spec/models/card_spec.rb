@@ -2,12 +2,21 @@ require 'rails_helper'
 
 RSpec.describe Card, type: :model do
   describe '.random_numplet' do
-    it 'should return uniq cards nuplet' do
-      cards = 50.times.map { create(:card) }
-      expect(cards.uniq { |c| c.id }.length).to eq 50
-      nuplet = Card.random_nuplet(50, cards)
-      u = nuplet.uniq { |c| c.id }
-      expect(u.length).to eq 50
+    context 'when users have enough cards' do
+      it 'should return uniq cards nuplet' do
+        cards = 5.times.map { create(:card) }
+        expect(cards.uniq { |c| c.id }.length).to eq 5
+        nuplet = Card.random_nuplet(5, cards)
+        u = nuplet.uniq { |c| c.id }
+        expect(u.length).to eq 5
+      end
+    end
+
+    context 'when users have not enough cards' do
+      it 'should raise error' do
+        expect { Card.random_nuplet(5, nil) }.to raise_error
+        expect { Card.random_nuplet(5, [nil, nil]) }.to raise_error
+      end
     end
   end
 
@@ -109,11 +118,68 @@ RSpec.describe Card, type: :model do
 
   describe '.clean_total' do
     it 'should return expected clean total' do
-      expect(Card.clean_total(0)).to raise_error
-      expect(Card.clean_total(1)).to raise_error
+      expect { Card.clean_total(0) }.to raise_error
+      expect { Card.clean_total(1) }.to raise_error
       expect(Card.clean_total(2)).to eq 1
       expect(Card.clean_total(3)).to eq 1
       expect(Card.clean_total(4)).to eq 2
+    end
+  end
+
+  describe '.flatten' do
+    context 'when total has not to be cleaned' do
+      it 'it flattened cards' do
+        user = create(:user)
+        cards = 5.times.map { create(:card) }
+        user.cards << cards + cards
+        cards = Card.cards_to_draw(user_id: user.id)
+        flat_cards = Card.flatten(cards);
+        expect(flat_cards.length).to eq 10
+        expect(flat_cards.all? { |c| c.is_a? Card }).to be true
+      end
+    end
+
+    context 'when total has to be cleaned' do
+      it 'it flattened cards' do
+        user = create(:user)
+        userb = create(:user)
+        cards = 5.times.map { create(:card) }
+        user.cards << cards + cards
+        userb.cards << cards
+        cards = Card.cards_to_draw(user_id: [user.id, userb.id] )
+        flat_cards = Card.flatten(cards, true);
+        expect(flat_cards.length).to eq 5
+        expect(flat_cards.all? { |c| c.is_a? Card }).to be true
+      end
+    end
+  end
+
+  describe '.get_trio' do
+    context 'when there is an opponent' do
+      it 'should return trio of cards' do
+        user = create(:user)
+        userb = create(:user)
+        base = 2.times.map { create(:card, :with_base_quality) }
+        common = 2.times.map { create(:card, :with_common_quality) }
+        epic = 4.times.map { create(:card, :with_epic_quality) }
+        rare = 4.times.map { create(:card, :with_rare_quality) }
+        legendary = 4.times.map { create(:card, :with_legendary_quality) }
+        cards = base + common + rare + epic + legendary
+        user.cards << cards + cards
+        userb.cards << cards
+        trio = Card.get_trio(user_id: user.id, opponent_id: userb.id)
+        expect(trio.length).to eq 3
+      end
+    end
+
+    context 'when there is no opponent' do
+      it 'should return trio of cards' do
+        user = create(:user)
+        cards = 5.times.map { create(:card) }
+        user.cards << cards
+        trio = Card.get_trio(user_id: user.id)
+        expect(trio.length).to eq 3
+      end
     end
   end
 end

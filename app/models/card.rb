@@ -18,6 +18,7 @@ class Card < ActiveRecord::Base
   scope :with_hero, ->(hero_id = nil) { where(hero_id: [nil, hero_id]) unless hero_id.nil? }
 
   def self.random_nuplet(n, cards)
+    raise('Not enough card') if cards.nil? || cards.length < n
     cards_buffer = cards.clone
     n.times.map do
       cards_buffer.slice!(rand(0..cards_buffer.length - 1))
@@ -33,10 +34,15 @@ class Card < ActiveRecord::Base
     Card.random_to_quality(random)
   end
 
+  # def available_qualities
+  #   self.cards.group(:quality).count
+  # end
+
   def self.random_to_quality(r)
     # Legendary 1%
     # Epic 9%
     # Rare 20%
+
     if r == 1
       quality = 5
     elsif r.between?(2, 10)
@@ -57,13 +63,24 @@ class Card < ActiveRecord::Base
   end
 
   def self.get_trio(options = {})
-    users = options[:opponent_id].nil? ? options[:user_id] : [options[:user_id], options[:opponent_id]]
-    cards = cards_to_draw(user_id: users, qualities: random_quality, hero_id: options[:hero_id])
+    if options[:opponent_id].nil?
+      is_total_must_be_clean = false
+      users = options[:user_id]
+    else
+      is_total_must_be_clean = true
+      users = [options[:user_id], options[:opponent_id]]
+    end
+
+    cards = cards_to_draw(user_id: users, hero_id: options[:hero_id])
+
+    flattened_cards = Card.flatten(cards, is_total_must_be_clean)
+    random_nuplet(3, flattened_cards)
   end
 
-  def self.flatten(cards, is_total_must_be_clean)
+  def self.flatten(cards, is_total_must_be_clean = false)
+    flattened_cards = []
     cards.each do |c|
-      total = is_total_must_be_clean ? clean_total(c.total) : total
+      total = is_total_must_be_clean ? clean_total(c.total) : c.total
       total.times { flattened_cards.push(c) }
     end
     flattened_cards
@@ -71,8 +88,7 @@ class Card < ActiveRecord::Base
 
   def self.clean_total(i)
     raise('Unexpected total') unless i.between?(2, 4)
-    return 2 if i == 4
-    1
+    i == 4 ? 2 : 1
   end
 end
 
