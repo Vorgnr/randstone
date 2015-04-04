@@ -6,6 +6,8 @@ resources :users do
   resources :decks
   post 'decks/new/add_opponent', to: 'decks#add_opponent'
   post 'decks/new/add_hero', to: 'decks#add_hero'
+  post 'decks/new/add_card', to: 'decks#add_card'
+  get 'decks/:id', to: 'decks#show'
 end
 
   resources :cards

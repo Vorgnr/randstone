@@ -5,6 +5,7 @@ RSpec.describe DecksController, type: :controller do
   let(:user_with_pick_hero_deck) { create(:user, :with_pick_hero_deck) }
   let(:user_with_hero_picked_deck) { create(:user, :with_heroes_picked_deck) }
   let(:user_with_pick_cards_deck) { create(:user, :with_pick_cards_deck) }
+  let(:user_with_completed_deck) { create(:user, :with_completed_deck) }
 
   describe '#new' do
     context 'when user has no pending deck' do
@@ -81,6 +82,14 @@ RSpec.describe DecksController, type: :controller do
         end
       end
     end
+
+    context 'when @deck is completed' do
+      it 'should redirect to index' do
+        # subject { get :new, user_id: user_with_completed_deck.id }
+        # expect(subject).to redirect_to(user_decks_path, user_with_completed_deck.id)
+        # expect(subject).to redirect_to :action=>"index", :controller=>"decks", user_id: user_with_completed_deck.id
+      end
+    end
   end
 
   describe '#add_opponent' do
@@ -153,14 +162,37 @@ RSpec.describe DecksController, type: :controller do
 
     it "should set @deck's status to pick_cards" do
         Hero.create(id: 1)
-        post :add_hero, user_id: user_with_hero_picked_deck.id, :hero => 1
+        post :add_hero, user_id: user_with_hero_picked_deck.id, hero: 1
         expect(assigns(:deck).status).to eq 'pick_cards'
     end
 
     it "should set @deck's hero" do
       Hero.create(id: 1)
-      post :add_hero, user_id: user_with_hero_picked_deck.id, :hero => 1
+      post :add_hero, user_id: user_with_hero_picked_deck.id, hero: 1
       expect(assigns(:deck).hero).to eq Hero.find(1)
+    end
+  end
+
+  describe '#add_card' do
+    context 'when @deck has not pick_cards status' do
+      it 'should raise error' do
+        card = create(:card)
+        expect { post :add_card, user_id: user.id, card: card.id }.to raise_error("Unexpected deck's status")
+      end
+    end
+
+    context 'when card is nil or empty' do
+      it 'should raise error' do
+        expect { post :add_card, user_id: user_with_pick_cards_deck.id, card: '' }.to raise_error("Card can not be nil or empty")
+        expect { post :add_card, user_id: user_with_pick_cards_deck.id, card: nil }.to raise_error("Card can not be nil or empty")
+      end
+    end
+
+    it 'should add card' do
+      card = create(:card)
+      expect(user_with_pick_cards_deck.current_deck.cards.length).to eq 0
+      expect(post :add_card, user_id: user_with_pick_cards_deck.id, card: card.id)
+      expect(user_with_pick_cards_deck.current_deck.cards.length).to eq 1
     end
   end
 end

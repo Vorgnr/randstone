@@ -1,9 +1,31 @@
 <h2>Pick cards</h2>
 
-<%= form_tag('user_decks_new_add_hero_path', method: 'post', id: 'cardsPicker') do %>
+<%= form_tag(user_decks_new_add_card_path, method: 'post', id: 'cardsPicker') do %>
     <% @cards.each do |card| %>
         <label><%= card.name %></label>
         <%= radio_button_tag 'card', card.id %>
     <% end %>
     <input id="pickCards" type="submit" value="next">
 <% end %>
+
+<script>
+    (function($, window, document) {
+        var validateCard = function() {
+            $('form#cardsPicker').submit(function(e) {
+                var selectedCard = $('input:checked[name=card]');
+                if(!selectedCard.length || !selectedCard.val().length) {
+                    e.preventDefault();
+                    warnUser();
+                }
+            })
+        };
+
+        var warnUser = function() {
+            $('p.hero-alert').show();
+        };
+
+        $(function() {
+            validateCard();
+        });
+    }(window.jQuery, window, document));
+</script>

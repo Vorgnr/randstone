@@ -76,4 +76,32 @@ RSpec.describe Deck, type: :model do
       expect(card_selection.is_consumed).to be false
     end
   end
+
+  describe '#add_card' do
+    context 'when deck has less than 29 cards' do
+      it 'should add card to deck' do
+        deck.add_card(create(:card))
+        expect(deck.cards.length).to eq 1
+      end
+    end
+    
+    context 'when deck has 29 cards' do
+      it 'should add card to deck and set status to completed' do
+        cards = 29.times.map { create(:card) }
+        deck.cards << cards
+        deck.add_card(create(:card))
+        expect(deck.cards.length).to eq 30
+        expect(deck.completed?).to be true
+      end
+
+      it 'should destroy deck\'s card selection' do
+        cards = 29.times.map { create(:card) }
+        deck.cards << cards
+        card_to_add = create(:card)
+        deck.create_card_selection([cards[0].id, cards[1].id, card_to_add.id])
+        deck.add_card(card_to_add)
+        expect(deck.current_cards_selection).to eq nil
+      end
+    end
+  end
 end

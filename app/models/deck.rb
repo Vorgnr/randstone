@@ -36,4 +36,13 @@ class Deck < ActiveRecord::Base
   def create_card_selection(cards)
     CardSelection.save_selection(self.id, cards)
   end
+
+  def add_card(card)
+    self.cards << card
+    cards_selection = self.current_cards_selection
+    cards_selection.destroy unless cards_selection.nil? 
+    if self.cards.length == 30
+      self.status = 'completed'
+    end
+  end
 end

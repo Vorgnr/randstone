@@ -1,6 +1,6 @@
 class DecksController < ApplicationController
-  before_action :set_user, only: [:index, :new, :add_opponent, :add_hero]
-  before_action :set_deck, only: [:new, :add_opponent, :add_hero]
+  before_action :set_user, only: [:index, :new, :show, :add_opponent, :add_hero, :add_card]
+  before_action :set_deck, only: [:new, :show, :add_opponent, :add_hero, :add_card]
 
   def index
   end
@@ -21,7 +21,17 @@ class DecksController < ApplicationController
         @cards = Card.get_trio(user_id: @user.id, opponent_id: @deck.opponent_id, hero_id: @deck.hero_id)
         @deck.create_card_selection(@cards.map { |c| c.id })
       end
+    else
+      redirect_to user_decks_path
     end
+  end
+
+  def add_card
+    raise "Unexpected deck's status" unless @deck.pick_cards?
+    raise 'Card can not be nil or empty' if !params[:card] || params[:card] == ''
+    card = Card.find(params[:card])
+    @deck.add_card(card)
+    redirect_to new_user_deck_path
   end
 
   def add_opponent
