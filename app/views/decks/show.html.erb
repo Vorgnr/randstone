@@ -1,3 +1,5 @@
 <h1>View Deck</h1>
 
-<%= @deck.cards %>
+<% @deck.cards.each do |card| %>
+    <p><%= card.name %>, <%= card.attack %> / <%= card.health %></p>
+<% end %>

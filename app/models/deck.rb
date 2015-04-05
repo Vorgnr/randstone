@@ -29,6 +29,10 @@ class Deck < ActiveRecord::Base
     return Deck.where(user_id: user_id).where.not(status: 4).first
   end
 
+  def self.users_deck(user_id)
+    return Deck.where(user_id: user_id).where(status: 4)
+  end
+
   def current_cards_selection
     CardSelection.where(deck_id: self.id, is_consumed: false).first
   end
@@ -42,7 +46,7 @@ class Deck < ActiveRecord::Base
     cards_selection = self.current_cards_selection
     cards_selection.destroy unless cards_selection.nil? 
     if self.cards.length == 30
-      self.status = 'completed'
+      self.update_attributes(:status => 'completed')
     end
   end
 end

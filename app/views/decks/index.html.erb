@@ -1,6 +1,7 @@
 <h1>Deck list</h1>
 
-<p>
-    <%= @user.inspect %>
-</p>
+<% @decks.each do |deck| %>
+    <%= deck.created_at %>
+    <%= link_to( "show", action: 'show', controller: 'decks', user_id: @user.id, id: deck.id) %>
+<% end %>
 

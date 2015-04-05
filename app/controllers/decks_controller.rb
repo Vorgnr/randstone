@@ -1,9 +1,15 @@
 class DecksController < ApplicationController
   before_action :set_user, only: [:index, :new, :show, :add_opponent, :add_hero, :add_card]
-  before_action :set_deck, only: [:new, :show, :add_opponent, :add_hero, :add_card]
+  before_action :set_deck, only: [:new, :add_opponent, :add_hero, :add_card]
 
   def index
+    @decks = Deck.users_deck(@user.id)
   end
+
+  def show
+    @deck = Deck.find(params[:id])
+  end
+
 
   def new
     if @deck.pick_opponent?
