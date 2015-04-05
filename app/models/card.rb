@@ -72,9 +72,12 @@ class Card < ActiveRecord::Base
     end
 
     cards = cards_to_draw(user_id: users, hero_id: options[:hero_id])
-
+    
     flattened_cards = Card.flatten(cards, is_total_must_be_clean)
-    random_nuplet(3, flattened_cards)
+    if !options[:cards_in_deck].nil?
+      Card.remove_cards_already_in_deck(options[:cards_in_deck], flattened_cards)
+    end
+    random_nuplet(3, flattened_cards.uniq)
   end
 
   def self.flatten(cards, is_total_must_be_clean = false)
@@ -84,6 +87,13 @@ class Card < ActiveRecord::Base
       total.times { flattened_cards.push(c) }
     end
     flattened_cards
+  end
+
+  def self.remove_cards_already_in_deck(cards_in_deck, cards)
+    cards_in_deck.each do |c|
+      index_to_delete = cards.index { |f| f.id == c.id }
+      cards.delete_at(index_to_delete) unless index_to_delete.nil?
+    end
   end
 
   def self.clean_total(i)

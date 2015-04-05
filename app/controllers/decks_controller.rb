@@ -10,7 +10,6 @@ class DecksController < ApplicationController
     @deck = Deck.find(params[:id])
   end
 
-
   def new
     if @deck.pick_opponent?
       set_opponents
@@ -24,7 +23,7 @@ class DecksController < ApplicationController
       if !card_selection.nil?
         @cards = Card.find(card_selection.values)
       else
-        @cards = Card.get_trio(user_id: @user.id, opponent_id: @deck.opponent_id, hero_id: @deck.hero_id)
+        @cards = Card.get_trio(user_id: @user.id, opponent_id: @deck.opponent_id, hero_id: @deck.hero_id, cards_in_deck: @deck.cards)
         @deck.create_card_selection(@cards.map { |c| c.id })
       end
     else

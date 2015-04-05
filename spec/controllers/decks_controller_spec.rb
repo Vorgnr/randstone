@@ -72,7 +72,8 @@ RSpec.describe DecksController, type: :controller do
           expect(assigns(:cards).length).to eq 3
         end
       end
-      context 'when @desk has current card selection' do
+
+      context 'when @deck has current card selection' do
         it 'should assign @cards' do
           cards = 3.times.map { create(:card) }
           user_with_pick_cards_deck.cards << cards

@@ -181,5 +181,24 @@ RSpec.describe Card, type: :model do
         expect(trio.length).to eq 3
       end
     end
+
+    context 'when current_deck already has cards' do
+      it 'should remove those cards' do
+        cards = 4.times.each_with_index.map { |x,i| create(:card, id: i + 1) }
+        user = create(:user, :with_pick_cards_deck)
+        deck = user.current_deck
+        user.cards << cards + cards
+        card_one = Card.find(1)
+        deck.cards << [card_one]
+        cards_to_draw = Card.cards_to_draw(user_id: user.id)
+        expect(cards_to_draw.length).to eq 4
+        flattened_cards = Card.flatten(cards_to_draw, false)
+        expect(flattened_cards.length).to eq 8
+        Card.remove_cards_already_in_deck(deck.cards, flattened_cards)
+        expect(flattened_cards.length).to eq 7
+      end
+    end
   end
 end
+
+

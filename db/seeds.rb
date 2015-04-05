@@ -11,15 +11,15 @@
 #   9 => Demonist
 #   11 => Druid
 
-Hero.create(class_name: 'Warrior', remote_id: 1, name: 'Garrosh Hellscream')
-Hero.create(class_name: 'Paladin', remote_id: 2, name: 'Uther Lightbringer')
-Hero.create(class_name: 'Hunter', remote_id: 3, name: 'Rexxar')
-Hero.create(class_name: 'Rogue', remote_id: 4, name: 'Valeera Sanguinar')
-Hero.create(class_name: 'Priest', remote_id: 5, name: 'Anduin Wrynn')
-Hero.create(class_name: 'Shaman', remote_id: 7, name: 'Thrall')
-Hero.create(class_name: 'Mage', remote_id: 8, name: 'Jaina Proudmoore')
-Hero.create(class_name: 'Demonist', remote_id: 9, name: 'Gul\'dan')
-Hero.create(class_name: 'Druid', remote_id: 11, name: 'Malfurion Stormrage')
+Hero.create(class_name: 'Warrior', id: 1, name: 'Garrosh Hellscream')
+Hero.create(class_name: 'Paladin', id: 2, name: 'Uther Lightbringer')
+Hero.create(class_name: 'Hunter', id: 3, name: 'Rexxar')
+Hero.create(class_name: 'Rogue', id: 4, name: 'Valeera Sanguinar')
+Hero.create(class_name: 'Priest', id: 5, name: 'Anduin Wrynn')
+Hero.create(class_name: 'Shaman', id: 7, name: 'Thrall')
+Hero.create(class_name: 'Mage', id: 8, name: 'Jaina Proudmoore')
+Hero.create(class_name: 'Demonist', id: 9, name: 'Gul\'dan')
+Hero.create(class_name: 'Druid', id: 11, name: 'Malfurion Stormrage')
 
 json = ActiveSupport::JSON.decode(File.read(File.dirname(__FILE__) + '/cards.json'))
 
