@@ -42,9 +42,6 @@ json.each do |c|
   })
 end
 
-baseCards = Card.where(set: 2, hero_id: nil)
-mageCards = Card.joins(:hero).where(heroes: { class_name: 'Mage' })
-twiceBaseCards = baseCards + baseCards
-User.create(name: 'Arnaud', cards: twiceBaseCards + mageCards)
-User.create(name: 'Sebastien', cards: twiceBaseCards)
-User.create(name: 'Bla', cards: mageCards)
+baseCards = Card.where(quality: 'base')
+arnaud = User.create! :name => 'arnaud', :email => 'arnaud@test.com', :password => '12345678', :password_confirmation => '12345678'
+arnaud.cards << baseCards + baseCards

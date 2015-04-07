@@ -4,7 +4,7 @@
     pls pick hero
 </p>
 
-<%= form_tag(user_decks_new_add_hero_path, method: 'post', id: 'heroPicker') do %>
+<%= form_tag(decks_new_add_hero_path, method: 'post', id: 'heroPicker') do %>
     <% @heroes.each do |hero| %>
         <label><%= hero.name %></label>
         <%= radio_button_tag 'hero', hero.id %>

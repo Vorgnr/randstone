@@ -5,10 +5,14 @@ RSpec.describe UsersController, type: :controller do
   let(:user) { create(:user) }
 
   describe '#index' do
-    before(:each) { get :index }
+    before(:each) do
+      @request.env["devise.mapping"] = Devise.mappings[:user]
+      sign_in user
+      get :index 
+    end
 
     it 'assigns all users to @users' do
-      expect(assigns(:users)).to match_array users
+      expect(assigns(:users).all? {|u| u.is_a? User}).to be true
     end
 
     it 'respond with success' do
@@ -21,7 +25,11 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '#show' do
-    before(:each) { get :show, id: user.id }
+    before(:each) do 
+      @request.env["devise.mapping"] = Devise.mappings[:user]
+      sign_in user
+      get :show, id: user.id 
+    end
 
     it 'respond with success' do
       expect(response).to be_success
@@ -37,7 +45,11 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '#new' do
-    before(:each) { get :new }
+    before(:each) do
+      @request.env["devise.mapping"] = Devise.mappings[:user]
+      sign_in user
+      get :new 
+    end
 
     it 'respond with success' do
       expect(response).to be_success

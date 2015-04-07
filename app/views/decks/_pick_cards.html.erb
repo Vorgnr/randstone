@@ -1,6 +1,6 @@
 <h2>Pick cards</h2>
 
-<%= form_tag(user_decks_new_add_card_path, method: 'post', id: 'cardsPicker') do %>
+<%= form_tag(decks_new_add_card_path, method: 'post', id: 'cardsPicker') do %>
     <% @cards.each do |card| %>
         <label><%= card.name %></label>
         <%= radio_button_tag 'card', card.id %>

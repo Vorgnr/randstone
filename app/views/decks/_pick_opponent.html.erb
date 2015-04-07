@@ -1,35 +1,6 @@
 <h2>Pick opponent</h2>
 
-<%= form_tag(user_decks_new_add_opponent_path, method: 'post') do %>
+<%= form_tag(decks_new_add_opponent_path, method: 'post') do %>
     <%= select("opponent", "id", @opponents.collect {|u| [u.name, u.id]}, {:include_blank => 'None'}) %>
     <input id="addOpponent" type="submit" value="next">
 <% end %>
-
-<script>
-    (function($, window, document) {
-
-        var handlingPickOpponent = function() {
-            $('#addOpponent').click(function() {
-                var opponentId = $('#opponent_id').val();
-                $.ajax({
-                    type: "POST",
-                    url: '<%= user_decks_new_add_opponent_path %>',
-                    data: JSON.stringify({ opponent_id:  opponentId }),
-                    dataType: "json",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    success: function() {
-                        $('#status-container').html("");
-                    }
-                });
-            });
-        };
-
-        $(function() {
-            //handlingPickOpponent();
-        });
-
-    }(window.jQuery, window, document));
-</script>

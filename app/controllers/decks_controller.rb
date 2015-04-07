@@ -36,13 +36,13 @@ class DecksController < ApplicationController
     raise 'Card can not be nil or empty' if !params[:card] || params[:card] == ''
     card = Card.find(params[:card])
     @deck.add_card(card)
-    redirect_to new_user_deck_path
+    redirect_to new_deck_path
   end
 
   def add_opponent
     raise "Unexpected deck's status" unless @deck.pick_opponent?
     if @deck.set_opponent(params[:opponent][:id])
-      redirect_to new_user_deck_path
+      redirect_to new_deck_path
     end
   end
 
@@ -50,13 +50,13 @@ class DecksController < ApplicationController
     raise "Unexpected deck's status" unless @deck.hero_picked?
     raise 'Hero can not be nil or empty' if !params[:hero] || params[:hero] == ''
     if @deck.set_hero(params[:hero])
-      redirect_to new_user_deck_path
+      redirect_to new_deck_path
     end
   end
 
   private
     def set_user
-      @user = User.find(params[:user_id])
+      @user = current_user
     end
 
     def set_deck

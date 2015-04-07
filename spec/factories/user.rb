@@ -1,6 +1,8 @@
 FactoryGirl.define do
   factory :user do
-    name 'John'
+    email { Faker::Internet.email }
+    password "password"
+    password_confirmation "password"
 
     trait :with_uncompleted_deck do
       after(:create) do |user|

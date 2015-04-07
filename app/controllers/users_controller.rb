@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :cards]
   respond_to :html
 
   # GET /users
@@ -26,6 +26,7 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(user_params)
+    @user.cards << baseCards + baseCards
 
     respond_to do |format|
       if @user.save
@@ -58,7 +59,6 @@ class UsersController < ApplicationController
   end
 
   def cards
-    @user =  User.find(params[:user_id])
     cards = Card.all + @user.cards
     @cards = Hash[cards.uniq.map{ |i| [i, cards.count(i) - 1] }]
   end
@@ -88,7 +88,7 @@ class UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:id])
+      @user = current_user
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -16,8 +16,7 @@
         <td><%= user.name %></td>
         <td><%= link_to 'Show', user %></td>
         <td><%= link_to 'Edit', edit_user_path(user) %></td>
-        <td><%= link_to 'New Deck', new_user_deck_path(user) %></td>
-        <td><%= link_to 'Decks', user_decks_path(user) %></td>
+        <td><%= link_to 'New Deck', new_deck_path(user) %></td>
         <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>

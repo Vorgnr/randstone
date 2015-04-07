@@ -1,5 +1,10 @@
 require 'rails_helper'
 
+def sign_in(user)
+  @request.env["devise.mapping"] = Devise.mappings[:user]
+  sign_in user
+end
+
 RSpec.describe DecksController, type: :controller do
   let(:user) { create(:user) }
   let(:user_with_pick_hero_deck) { create(:user, :with_pick_hero_deck) }
@@ -7,15 +12,18 @@ RSpec.describe DecksController, type: :controller do
   let(:user_with_pick_cards_deck) { create(:user, :with_pick_cards_deck) }
   let(:user_with_completed_deck) { create(:user, :with_completed_deck) }
 
+
   describe '#new' do
     context 'when user has no pending deck' do
       it 'should create @deck' do
-        get :new, user_id: user.id
+        sign_in(user)
+        get :new
         expect(assigns(:deck)).to be
       end
 
       it "@deck's status should be pick_opponent" do
-        get :new, user_id: user.id
+        sign_in(user)
+        get :new
         expect(assigns(:deck).pick_opponent?).to be true
       end
     end
@@ -23,8 +31,9 @@ RSpec.describe DecksController, type: :controller do
     context 'when user has deck with pick_hero status' do
       context 'and there is not at least 3 heroes in db' do
         it 'should raise error' do
+          sign_in(user_with_pick_hero_deck)
           expect {
-            get :new, user_id: user_with_pick_hero_deck.id
+            get :new
           }.to raise_error
         end
       end
@@ -32,18 +41,21 @@ RSpec.describe DecksController, type: :controller do
       context 'and there is sufficient amount of heroes' do
         it 'should assign heroes' do
           9.times.map { create(:hero) }
-          get :new, user_id: user_with_pick_hero_deck.id
+          sign_in(user_with_pick_hero_deck)
+          get :new
           expect(assigns(:heroes).all? { |h| h.is_a? Hero }).to be true
         end
 
         it 'should set @deck status to hero_picked' do
           9.times.map { create(:hero) }
+          sign_in(user_with_pick_hero_deck)
           get :new, user_id: user_with_pick_hero_deck.id
           expect(assigns(:deck).hero_picked?).to be true
         end
 
         it "should set @deck's heroes' id" do
           9.times.map { create(:hero) }
+          sign_in(user_with_pick_hero_deck)
           get :new, user_id: user_with_pick_hero_deck.id
           expect(assigns(:heroes).map {|h| h.id}).to eq HeroSelection.find_by(deck_id: assigns(:deck).id).values
         end
@@ -58,7 +70,8 @@ RSpec.describe DecksController, type: :controller do
         Hero.create(id: 3)
         d = user_with_hero_picked_deck.current_deck
         HeroSelection.save_selection(d.id, [1, 2, 3])
-        get :new, user_id: user_with_hero_picked_deck.id
+        sign_in(user_with_hero_picked_deck)
+        get :new
         expect(assigns(:heroes).all? { |h| h.is_a? Hero }).to be true
       end
     end
@@ -68,7 +81,8 @@ RSpec.describe DecksController, type: :controller do
         it 'should assign @cards' do
           cards = 3.times.map { create(:card) }
           user_with_pick_cards_deck.cards << cards
-          get :new, user_id: user_with_pick_cards_deck.id
+          sign_in(user_with_pick_cards_deck)
+          get :new
           expect(assigns(:cards).length).to eq 3
         end
       end
@@ -78,7 +92,8 @@ RSpec.describe DecksController, type: :controller do
           cards = 3.times.map { create(:card) }
           user_with_pick_cards_deck.cards << cards
           user_with_pick_cards_deck.current_deck.create_card_selection(cards.map { |c| c.id })
-          get :new, user_id: user_with_pick_cards_deck.id
+          sign_in(user_with_pick_cards_deck)
+          get :new
           expect(assigns(:cards).length).to eq 3
         end
       end
@@ -96,9 +111,9 @@ RSpec.describe DecksController, type: :controller do
   describe '#add_opponent' do
     context "when user's deck's status is not pick_opponent" do
       it 'should raise error' do
+        sign_in(user_with_hero_picked_deck)
         expect {
           post :add_opponent, 
-            user_id: user_with_hero_picked_deck.id, 
             :opponent => { :id => "1" }
         }.to raise_error
       end
@@ -107,7 +122,8 @@ RSpec.describe DecksController, type: :controller do
     context "when opponent's id is empty" do
       it "should set @deck's opponent_id to nil" do
         opponent_id = ""
-        post :add_opponent, user_id: user.id, :opponent => { :id => opponent_id }
+        sign_in(user)
+        post :add_opponent, :opponent => { :id => opponent_id }
         expect(assigns(:user).current_deck.opponent_id).to be nil
       end
     end
@@ -115,14 +131,16 @@ RSpec.describe DecksController, type: :controller do
     context "when opponent's id is nil" do
       it "should set @deck's opponent_id to nil" do
         opponent_id = nil
-        post :add_opponent, user_id: user.id, :opponent => { :id => opponent_id }
+        sign_in(user)
+        post :add_opponent, :opponent => { :id => opponent_id }
         expect(assigns(:user).current_deck.opponent_id).to be nil
       end
     end
 
     it "should update @deck's opponent" do
       opponent = create(:user)
-      post :add_opponent, user_id: user.id, :opponent => { :id => opponent.id }
+      sign_in(user)
+      post :add_opponent, :opponent => { :id => opponent.id }
       expect(assigns(:deck).opponent_id).to eq opponent.id
     end
   end
@@ -130,10 +148,10 @@ RSpec.describe DecksController, type: :controller do
   describe '#add_hero' do
     context 'when !@deck.hero_picked?' do
       it 'raise error' do
+        sign_in(user)
         Hero.create(id: 1)
         expect {
           post :add_hero, 
-            user_id: user.id, 
             :hero => 1
         }.to raise_error("Unexpected deck's status")
       end
@@ -141,10 +159,10 @@ RSpec.describe DecksController, type: :controller do
 
     context 'when hero params is nil' do
       it 'raise error' do
+        sign_in(user_with_hero_picked_deck)
         Hero.create(id: 1)
         expect {
           post :add_hero, 
-            user_id: user_with_hero_picked_deck.id, 
             :hero => nil
         }.to raise_error('Hero can not be nil or empty')
       end
@@ -152,6 +170,7 @@ RSpec.describe DecksController, type: :controller do
 
     context 'when hero params is empty' do
       it 'raise error' do
+        sign_in(user_with_hero_picked_deck)
         Hero.create(id: 1)
         expect {
           post :add_hero, 
@@ -163,13 +182,15 @@ RSpec.describe DecksController, type: :controller do
 
     it "should set @deck's status to pick_cards" do
         Hero.create(id: 1)
-        post :add_hero, user_id: user_with_hero_picked_deck.id, hero: 1
+        sign_in(user_with_hero_picked_deck)
+        post :add_hero, hero: 1
         expect(assigns(:deck).status).to eq 'pick_cards'
     end
 
     it "should set @deck's hero" do
       Hero.create(id: 1)
-      post :add_hero, user_id: user_with_hero_picked_deck.id, hero: 1
+      sign_in(user_with_hero_picked_deck)
+      post :add_hero, hero: 1
       expect(assigns(:deck).hero).to eq Hero.find(1)
     end
   end
@@ -178,21 +199,24 @@ RSpec.describe DecksController, type: :controller do
     context 'when @deck has not pick_cards status' do
       it 'should raise error' do
         card = create(:card)
-        expect { post :add_card, user_id: user.id, card: card.id }.to raise_error("Unexpected deck's status")
+        sign_in(user)
+        expect { post :add_card, card: card.id }.to raise_error("Unexpected deck's status")
       end
     end
 
     context 'when card is nil or empty' do
       it 'should raise error' do
-        expect { post :add_card, user_id: user_with_pick_cards_deck.id, card: '' }.to raise_error("Card can not be nil or empty")
-        expect { post :add_card, user_id: user_with_pick_cards_deck.id, card: nil }.to raise_error("Card can not be nil or empty")
+        sign_in(user_with_pick_cards_deck)
+        expect { post :add_card, card: '' }.to raise_error("Card can not be nil or empty")
+        expect { post :add_card, card: nil }.to raise_error("Card can not be nil or empty")
       end
     end
 
     it 'should add card' do
       card = create(:card)
+      sign_in(user_with_pick_cards_deck)
       expect(user_with_pick_cards_deck.current_deck.cards.length).to eq 0
-      expect(post :add_card, user_id: user_with_pick_cards_deck.id, card: card.id)
+      expect(post :add_card, card: card.id)
       expect(user_with_pick_cards_deck.current_deck.cards.length).to eq 1
     end
   end
