@@ -15,3 +15,11 @@
  */
 
 @import "materialize";
+
+$menu-width: 240px;
+
+header, main, footer {
+    &.with-padding-left {
+        padding-left: $menu-width;
+    }
+}

@@ -1,0 +1,15 @@
+<nav class="top-nav">
+  <div class="container">
+    <ul id="dropdown1" class="dropdown-content">
+      <li><%= link_to('Sign out', destroy_user_session_path, :method => :delete) %></li>
+    </ul>
+    <div class="nav-wrapper">
+      <a href="" class="brand-logo">Randstone</a>
+      <li>
+        <a class="dropdown-button" href="#!" data-activates="dropdown1">
+          <i class="mdi-navigation-more-vert right"></i>
+        </a>
+      </li>
+    </div>
+  </div>
+</nav>

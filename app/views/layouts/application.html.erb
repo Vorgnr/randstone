@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Randstone</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
+  <%= render "layouts/head" %>
 <body>
+<header class="with-padding-left">
+  <%= render "layouts/nav" %>
+  <%= render "layouts/menu" %>
+</header>
 
-<%= yield %>
+<main class="with-padding-left">
+  <div class="container">
+    <%= yield %>
+  </div>
+</main>
 
 </body>
 </html>
