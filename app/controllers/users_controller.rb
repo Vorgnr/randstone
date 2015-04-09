@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :cards]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :cards, :add_card, :delete_card]
   respond_to :html
 
   # GET /users
@@ -64,9 +64,7 @@ class UsersController < ApplicationController
   end
 
   def add_card
-    @user =  User.find(params[:user_id])
     @card = Card.find(params[:card_id])
-
     @user.cards << @card
 
     respond_to do |format|
@@ -75,9 +73,7 @@ class UsersController < ApplicationController
   end
 
   def delete_card
-    @user =  User.find(params[:user_id])
     @card = Card.find(params[:card_id])
-
     @user.cards.delete(@card)
 
     respond_to do |format|

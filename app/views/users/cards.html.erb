@@ -148,7 +148,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: '<%= user_add_card_path %>',
+                    url: '<%= add_card_path %>',
                     data: JSON.stringify({ card_id:  cardId }),
                     dataType: "json",
                     headers: {
@@ -171,7 +171,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: '<%= user_delete_card_path %>',
+                    url: '<%= delete_card_path %>',
                     data: JSON.stringify({ card_id:  cardId }),
                     dataType: "json",
                     headers: {
@@ -191,7 +191,7 @@
             $('#addAllCards').click(function() {
                 $.ajax({
                     type: "POST",
-                    url: '<%= user_add_card_path %>',
+                    url: '<%= add_card_path %>',
                     data: JSON.stringify({ card_id:  getCardToSave() }),
                     dataType: "json",
                     headers: {
