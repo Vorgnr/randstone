@@ -98,14 +98,6 @@ RSpec.describe DecksController, type: :controller do
         end
       end
     end
-
-    context 'when @deck is completed' do
-      it 'should redirect to index' do
-        # subject { get :new, user_id: user_with_completed_deck.id }
-        # expect(subject).to redirect_to(user_decks_path, user_with_completed_deck.id)
-        # expect(subject).to redirect_to :action=>"index", :controller=>"decks", user_id: user_with_completed_deck.id
-      end
-    end
   end
 
   describe '#add_opponent' do
@@ -209,6 +201,22 @@ RSpec.describe DecksController, type: :controller do
         sign_in(user_with_pick_cards_deck)
         expect { post :add_card, card: '' }.to raise_error("Card can not be nil or empty")
         expect { post :add_card, card: nil }.to raise_error("Card can not be nil or empty")
+      end
+    end
+
+    context 'when there are 29 cards in thuser_with_pick_cards_decke deck' do
+      it 'should redirect to decks_path' do
+        sign_in(user_with_pick_cards_deck)
+        user_with_pick_cards_deck.current_deck.cards << 29.times.map { create(:card) }
+        expect(post :add_card, card: create(:card).id).to redirect_to decks_path
+      end
+    end
+
+    context 'when there are less than 29 cards in the deck' do
+      it 'should redirect to new_deck_path' do
+        sign_in(user_with_pick_cards_deck)
+        user_with_pick_cards_deck.current_deck.cards << 5.times.map { create(:card) }
+        expect(post :add_card, card: create(:card).id).to redirect_to new_deck_path
       end
     end
 

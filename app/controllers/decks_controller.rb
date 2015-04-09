@@ -26,8 +26,6 @@ class DecksController < ApplicationController
         @cards = Card.get_trio(user_id: @user.id, opponent_id: @deck.opponent_id, hero_id: @deck.hero_id, cards_in_deck: @deck.cards)
         @deck.create_card_selection(@cards.map { |c| c.id })
       end
-    else
-      redirect_to user_decks_path
     end
   end
 
@@ -36,7 +34,7 @@ class DecksController < ApplicationController
     raise 'Card can not be nil or empty' if !params[:card] || params[:card] == ''
     card = Card.find(params[:card])
     @deck.add_card(card)
-    redirect_to new_deck_path
+    redirect_to (@deck.completed?) ? decks_path : new_deck_path
   end
 
   def add_opponent

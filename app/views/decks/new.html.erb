@@ -10,6 +10,8 @@
     <% end %>
 </div>
 
+<%= @deck.cards.length %> / 30
+
 <ul>
     <% @deck.cards.each do |card| %>
         <li><%= card.name %></li>

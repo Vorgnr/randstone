@@ -1,12 +1,16 @@
 <h2>Pick cards</h2>
 
-<%= form_tag(decks_new_add_card_path, method: 'post', id: 'cardsPicker') do %>
-    <% @cards.each do |card| %>
-        <label><%= card.name %></label>
-        <%= radio_button_tag 'card', card.id %>
+<div class="row">
+    <%= form_tag(decks_new_add_card_path, method: 'post', id: 'cardsPicker') do %>
+        <% @cards.each do |card| %>
+            <p>
+                <%= radio_button_tag 'card', card.id %>
+                <%= label_tag('card_' + card.id.to_s,  card.name)  %>
+            </p>
+        <% end %>
+        <input id="pickCards" type="submit" value="next">
     <% end %>
-    <input id="pickCards" type="submit" value="next">
-<% end %>
+</div>
 
 <script>
     (function($, window, document) {
