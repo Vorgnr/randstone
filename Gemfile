@@ -29,6 +29,8 @@ gem 'simplecov', :require => false, :group => :test
 
 gem 'devise'
 
+gem 'materialize-sass'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
