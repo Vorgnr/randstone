@@ -1,4 +1,5 @@
 # http://www.hearthhead.com/data=hearthstone-cards
+# http://wow.zamimg.com/images/hearthstone/cards/enus/medium/EX1_350.png
     
 # Heroes
 #   1 => Warrior
