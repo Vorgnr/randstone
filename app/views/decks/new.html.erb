@@ -2,16 +2,26 @@
 
 <div class="row">
     <div class="col s6">
-        <% if @deck.pick_opponent? %>
-            <%= render partial: @deck.status, object: @opponents %>
-        <% elsif @deck.pick_hero? || @deck.hero_picked? %>
-            <%= render partial: 'pick_hero', object: @heroes %>
-        <% elsif @deck.pick_cards? %>
-            <%= render partial: @deck.status, object: @cards %>
-        <% end %>
+        <div class="row">
+            <div class="col s12">
+                <% if @deck.pick_opponent? %>
+                    <%= render partial: @deck.status, object: @opponents %>
+                <% elsif @deck.pick_hero? || @deck.hero_picked? %>
+                    <%= render partial: 'pick_hero', object: @heroes %>
+                <% elsif @deck.pick_cards? %>
+                    <%= render partial: @deck.status, object: @cards %>
+                <% end %>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <%= render partial: 'mana_curve' %>
+            </div>
+        </div>
+
     </div>
     <div class="col s6">
-        <%= render partial: 'deck_thumbnails', locals: { cards: @deck.cards }%>
+        <%= render partial: 'deck_thumbnails', locals: { cards: @card_with_count }%>
     </div>
 </div>
 

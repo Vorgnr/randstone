@@ -26,6 +26,28 @@ class DecksController < ApplicationController
         @cards = Card.get_trio(user_id: @user.id, opponent_id: @deck.opponent_id, hero_id: @deck.hero_id, cards_in_deck: @deck.cards)
         @deck.create_card_selection(@cards.map { |c| c.id })
       end
+      set_mana_curve
+    end
+  end
+
+  def set_mana_curve
+    card_count = @deck.cards.length
+    @card_with_count = Hash.new(0)
+    card_count_by_cost = Hash.new(0)
+    @mana_curve = Hash.new(0)
+    ordered_cards = @deck.cards.order(:cost)
+    ordered_cards.each do |v| 
+      @card_with_count[v] +=1
+      index = v.cost
+      if v.cost >= 7
+        index = 7
+      end
+      card_count_by_cost[index] += 1
+    end
+    card_count_by_cost.each do |cost, count|
+      @mana_curve[cost] = { 
+        rate: (count.to_f / card_count.to_f) * 100, 
+        count: card_count_by_cost[cost] }
     end
   end
 

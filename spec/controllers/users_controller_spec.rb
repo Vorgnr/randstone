@@ -11,10 +11,6 @@ RSpec.describe UsersController, type: :controller do
       get :index 
     end
 
-    it 'assigns all users to @users' do
-      expect(assigns(:users).all? {|u| u.is_a? User}).to be true
-    end
-
     it 'respond with success' do
       expect(response).to be_success
     end

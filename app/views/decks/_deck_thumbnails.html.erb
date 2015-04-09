@@ -7,8 +7,12 @@
     </div>
     <div class="col s12">
       <ul class="collection">
-        <% cards.each do |c| %>
-          <li class="collection-item"><%= c.name %></li>
+        <% cards.each do |card, count| %>
+          <li class="collection-item">
+            <span class="circle"><%= card.cost %></span>
+            <%= card.name %>
+            <span class="badge"><%= count %></span>
+          </li>
         <% end %>
       </ul>
     </div>
