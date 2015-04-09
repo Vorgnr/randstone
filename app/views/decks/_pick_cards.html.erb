@@ -1,15 +1,19 @@
-<h2>Pick cards</h2>
+<h5>Pick cards</h5>
 
 <div class="row">
-    <%= form_tag(decks_new_add_card_path, method: 'post', id: 'cardsPicker') do %>
-        <% @cards.each do |card| %>
-            <p>
-                <%= radio_button_tag 'card', card.id %>
-                <%= label_tag('card_' + card.id.to_s,  card.name)  %>
-            </p>
-        <% end %>
-        <input id="pickCards" type="submit" value="next">
-    <% end %>
+    <div class="col s12">
+         <%= form_tag(decks_new_add_card_path, method: 'post', id: 'cardsPicker') do %>
+             <% @cards.each do |card| %>
+                 <p>
+                     <%= radio_button_tag 'card', card.id %>
+                     <%= label_tag('card_' + card.id.to_s, card.name)  %>
+                 </p>
+             <% end %>
+             <button class="btn waves-effect waves-light" type="submit">Next
+                 <i class="mdi-content-send right"></i>
+             </button>
+         <% end %>   
+    </div>
 </div>
 
 <script>
