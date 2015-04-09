@@ -1,50 +1,75 @@
-<h1><%= @user.name %>'s collection</h1>
+<h3 class="header">My collection</h3>
 
-<label>Name filter</label>
-<input type="text" id="nameFilter">
+<nav>
+    <div class="nav-wrapper">
+        <div class="input-field">
+            <input type="search" id="nameFilter">
+            <label for="search"><i class="mdi-action-search"></i></label>
+            <i class="mdi-navigation-close"></i>
+        </div>
+    </div>
+</nav>
 
-<select id="classFilter">
-    <option value="All">All</option>
-    <option value="">Common</option>
-    <option value="1">Warrior</option>
-    <option value="2">Paladin</option>
-    <option value="3">Hunter</option>
-    <option value="4">Rogue</option>
-    <option value="5">Priest</option>
-    <option value="11">Druid</option>
-    <option value="7">Shaman</option>
-    <option value="8">Mage</option>
-    <option value="9">Demonist</option>
-</select>
+<div class="row">
+    <div class="col s3">
+        <div class="input-field">
+            <select id="classFilter">
+                <option value="All">All</option>
+                <option value="">Common</option>
+                <option value="1">Warrior</option>
+                <option value="2">Paladin</option>
+                <option value="3">Hunter</option>
+                <option value="4">Rogue</option>
+                <option value="5">Priest</option>
+                <option value="11">Druid</option>
+                <option value="7">Shaman</option>
+                <option value="8">Mage</option>
+                <option value="9">Demonist</option>
+            </select>
+            <label>Hero</label>
+        </div>
+    </div>
+    <div class="col s3">
+        <div class="input-field">
+            <select id="typeFilter">
+                <option value="All">All</option>
+                <option value="4">Minion</option>
+                <option value="5">Spell</option>
+                <option value="7">Weapon</option>
+            </select>
+            <label>Type</label>
+        </div>
+    </div>
+    <div class="col s3">
+        <div class="input-field">
+            <select id="setFilter">
+                <option value="All">All</option>
+                <option value="2">Base</option>
+                <option value="3">Craft</option>
+            </select>
+            <label>Set</label>
+        </div>
+    </div>
+    <div class="col s3">
+        <div class="input-field">
+            <select id="costFilter">
+                <option value="All">All</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8+">8+</option>
+            </select>
+            <label>Cost</label>
+        </div>
+    </div>
+</div>
 
-<select id="typeFilter">
-    <option value="All">All</option>
-    <option value="4">Minion</option>
-    <option value="5">Spell</option>
-    <option value="7">Weapon</option>
-</select>
-
-<label>Set</Label>
-<select id="setFilter">
-    <option value="All">All</option>
-    <option value="2">Base</option>
-    <option value="3">Craft</option>
-</select>
-
-<select id="costFilter">
-    <option value="All">All</option>
-    <option value="0">0</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6">6</option>
-    <option value="7">7</option>
-    <option value="8+">8+</option>
-</select>
-
-<table>
+<table class="striped">
     <thead>
     <tr>
         <th>Set</th>
@@ -59,7 +84,7 @@
         <th>Description</th>
         <th>Popularity</th>
         <th>In possession</th>
-        <th><input id="addAllCards" type="button" value="Add All"/></th>
+        <th><a id="addAllCards" class="btn-floating"><i class="mdi-content-add"></i></a></th>
         <th colspan="3"></th>
     </tr>
     </thead>
@@ -69,7 +94,7 @@
         <tr class="card-line">
             <input type="hidden" value="<%= card.id %>"/>
             <td class="card-set"><%= card.set %></td>
-            <td><%= card.quality %></td>
+            <td class="card-quality"><%= card.quality %></td>
             <td class="card-type"><%= card.type_id %></td>
             <td class="card-cost"><%= card.cost %></td>
             <td><%= card.health %></td>
@@ -80,10 +105,10 @@
             <td><%= card.description %></td>
             <td><%= card.popularity %></td>
             <td class="card-count"><%= count %></td>
-            <td><input data-role="add-card" type="button" value="+"/></td>
-            <% if count > 0 %>
-                <td class="delete-card"><input data-role="delete-card" type="button" value="-"/></td>
-            <% end %>
+            <td class="add-card"><a data-role="add-card" class="btn-floating"><i class="mdi-content-add"></i></a></td>
+            <td class="delete-card">
+                <a data-role="delete-card" class="btn-floating"><i class="mdi-content-remove-circle"></i></a>
+            </td>
         </tr>
     <% end %>
     </tbody>
@@ -136,15 +161,20 @@
 
         var getCardToSave = function() {
             return $('tr:visible.card-line').map(function(i, e) {
-                return parseInt($(e).children('input[type=hidden]').val());
+                if ($(e).children('td.add-card').children('a').is(':visible')) {
+                    return parseInt($(e).children('input[type=hidden]').val());
+                }
             }).get();
         };
 
         var handlingCardAdd = function() {
-            $('input[data-role=add-card]').click(function() {
-                var cardId = $(this).closest('tr').children('input[type=hidden]').val();
-                var count =  $(this).closest('tr').children('td.card-count');
-                var deleteColumn = $(this).closest('tr').children('td.delete-card')
+            $('a[data-role=add-card]').click(function() {
+                var e = $(this).closest('tr');
+                var cardId = e.children('input[type=hidden]').val();
+                var count =  e.children('td.card-count');
+                var quality = e.children('td.card-quality').html();
+                var addButton = e.children('td.add-card').children('a');
+                var deleteButton = e.children('td.delete-card').children('a');
 
                 $.ajax({
                     type: "POST",
@@ -156,18 +186,23 @@
                         "Accept": "application/json"
                     },
                     success: function() {
-                        count.text(parseInt(count.text()) + 1);
-                        deleteColumn.show();
+                        console.log(count);
+                        var newCount = parseInt(count.html()) + 1;
+                        count.html(newCount);
+                        displayButtons(addButton, deleteButton, quality, newCount);
                     }
                 });
             });
         };
 
         var handlingDeleteCard = function() {
-            $('input[data-role=delete-card]').click(function() {
-                var cardId = $(this).closest('tr').children('input[type=hidden]').val();
-                var count =  $(this).closest('tr').children('td.card-count');
-                var deleteColumn = $(this).closest('tr').children('td.delete-card')
+            $('a[data-role=delete-card]').click(function() {
+                var e = $(this).closest('tr');
+                var cardId = e.children('input[type=hidden]').val();
+                var count =  e.children('td.card-count');
+                var quality = e.children('td.card-quality').html();
+                var addButton = e.children('td.add-card').children('a');
+                var deleteButton = e.children('td.delete-card').children('a');
 
                 $.ajax({
                     type: "POST",
@@ -179,9 +214,9 @@
                         "Accept": "application/json"
                     },
                     success: function() {
-                        count.text(parseInt(count.text()) - 1);
-                        if(count.text() == "0")
-                            deleteColumn.hide();
+                        var newCount = parseInt(count.html()) - 1;
+                        count.html(newCount);
+                        displayButtons(addButton, deleteButton, quality, newCount);
                     }
                 });
             });
@@ -199,13 +234,38 @@
                         "Accept": "application/json"
                     },
                     success: function(d) {
+                        initButtons();
                     }
                 });
             });
         };
 
-        var initAddButton = function() {
-            
+        var displayButtons = function(addBtn, deleteBtn, quality, count) {
+            addBtn.show();
+            deleteBtn.show();
+            if (quality === 'legendary') {
+                if (count > 0) {
+                    addBtn.hide();
+                } else {
+                    deleteBtn.hide();
+                }
+            } else if (count >= 2) {
+                addBtn.hide();    
+            } else if (count <= 0) {
+                deleteBtn.hide();
+            }
+        };
+
+        var initButtons = function() {
+            $("tr.card-line").each(function() {
+                var e = $(this);
+                var count = parseInt(e.children('td.card-count').html());
+                var quality = e.children('td.card-quality').html();
+                var addButton = e.children('td.add-card').children('a');
+                var deleteButton = e.children('td.delete-card').children('a');
+
+                displayButtons(addButton, deleteButton, quality, count);
+            });
         }
 
         $(function() {
@@ -217,6 +277,8 @@
             handlingCardAdd();
             handlingDeleteCard();
             addAll();
+            $('select').material_select();
+            initButtons();
         });
     }(window.jQuery, window, document));
 </script>

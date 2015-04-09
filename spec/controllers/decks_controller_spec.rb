@@ -12,7 +12,6 @@ RSpec.describe DecksController, type: :controller do
   let(:user_with_pick_cards_deck) { create(:user, :with_pick_cards_deck) }
   let(:user_with_completed_deck) { create(:user, :with_completed_deck) }
 
-
   describe '#new' do
     context 'when user has no pending deck' do
       it 'should create @deck' do
