@@ -1,7 +1,9 @@
-<h1>Deck list</h1>
+<h3 class="header">Deck list</h3>
 
-<% @decks.each do |deck| %>
-    <%= deck.created_at %>
-    <%= link_to( "show", action: 'show', controller: 'decks', user_id: @user.id, id: deck.id) %>
-<% end %>
+<div class="collection">
+  <% @decks.each do |deck| %>
+      <%= link_to deck.created_at, { controller: "decks", action: "show", id: deck.id}, class: "collection-item" %>
+  <% end %>
+</div>
+
 
