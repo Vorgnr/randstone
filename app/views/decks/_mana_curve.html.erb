@@ -1,11 +1,13 @@
-<% @mana_curve.each do |cost, curve| %>
-  <div class="row">
-    <div class="col s9">
-      <span class="left"><%= cost %></span>
-      <span class="right"><%= curve[:count] %></span>
-      <div class="progress">
-        <div class="determinate" style="width: <%= curve[:rate] %>%"></div>
+<% if @mana_curve  %>
+  <% @mana_curve.each do |cost, curve| %>
+    <div class="row">
+      <div class="col s9">
+        <span class="left"><%= cost %></span>
+        <span class="right"><%= curve[:count] %></span>
+        <div class="progress">
+          <div class="determinate" style="width: <%= curve[:rate] %>%"></div>
+        </div>
       </div>
     </div>
-  </div>
+  <% end %>
 <% end %>
