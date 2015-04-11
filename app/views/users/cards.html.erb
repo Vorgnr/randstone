@@ -285,6 +285,13 @@
             handlingDeleteCard();
             addAll();
             $('select').material_select();
+            $('.card-line').tooltip({
+                delay: 50,
+                open: function( event, ui ) {
+                    console.log('event' + event);
+                    console.log('ui' + ui);
+                }
+            });
             initButtons();
         });
     }(window.jQuery, window, document));

@@ -14,6 +14,7 @@ class CreateCards < ActiveRecord::Migration
       t.string :name
       t.string :description
       t.integer :popularity
+      t.string :image
 
       t.timestamps null: false
     end

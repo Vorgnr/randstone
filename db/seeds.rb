@@ -1,6 +1,6 @@
 # http://www.hearthhead.com/data=hearthstone-cards
 # http://wow.zamimg.com/images/hearthstone/cards/enus/medium/EX1_350.png
-    
+   
 # Heroes
 #   1 => Warrior
 #   2 => Paladin
@@ -23,8 +23,9 @@ Hero.create(class_name: 'Demonist', id: 9, name: 'Gul\'dan')
 Hero.create(class_name: 'Druid', id: 11, name: 'Malfurion Stormrage')
 
 json = ActiveSupport::JSON.decode(File.read(File.dirname(__FILE__) + '/cards.json'))
+card_count = json.length
 
-json.each do |c|
+json.each do |c, i|
   Card.create({
     :id => c['id'],
     :set => c['set'],
@@ -39,7 +40,8 @@ json.each do |c|
     :collectible => c['collectible'],
     :description => c['description'],
     :name => c['name'],
-    :popularity => c['popularity']
+    :popularity => c['popularity'],
+    :image => c['image']
   })
 end
 
