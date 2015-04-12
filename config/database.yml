@@ -17,6 +17,10 @@ default: &default
   password:
   socket: /var/run/mysqld/mysqld.sock
 
+heroku:
+  adapter: postgresql
+  pool: 5
+
 development:
   <<: *default
   database: randstone_development
@@ -48,7 +52,7 @@ test:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
 production:
-  <<: *default
+  <<: *heroku
   database: randstone_production
   username: randstone
   password: <%= ENV['RANDSTONE_DATABASE_PASSWORD'] %>
