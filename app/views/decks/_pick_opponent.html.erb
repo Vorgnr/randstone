@@ -3,7 +3,10 @@
 <%= form_tag(decks_new_add_opponent_path, method: 'post') do %>
 <div class="row">
   <div class="input-field">
-    <%= select("opponent", "id", @opponents.collect {|u| [u.name, u.id]}, {:include_blank => 'None'}, class: "browser-default") %>
+    <select class="browser-default" name="opponent[id]" id="opponent_id">
+      <option value="">None</option>
+    </select>
+    <%#= select("opponent", "id", @opponents.collect {|u| [u.name, u.id]}, {:include_blank => 'None'}, class: "browser-default") %>
   </div>
 </div>
 

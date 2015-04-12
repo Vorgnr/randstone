@@ -169,7 +169,7 @@
         var getCardToSave = function() {
             return $('tr:visible.card-line').map(function(i, e) {
                 if ($(e).children('td.add-card').children('a').is(':visible')) {
-                    return parseInt($(e).children('input[type=hidden]').val());
+                    return $(e);
                 }
             }).get();
         };
@@ -193,7 +193,6 @@
                         "Accept": "application/json"
                     },
                     success: function() {
-                        console.log(count);
                         var newCount = parseInt(count.html()) + 1;
                         count.html(newCount);
                         displayButtons(addButton, deleteButton, quality, newCount);
@@ -231,10 +230,19 @@
 
         var addAll = function() {
             $('#addAllCards').click(function() {
+                var cardLines = getCardToSave();
+                console.log(cardLines);
+                var cardIds = [];
+                cardLines.forEach(function(e) {
+                    var count =  $(e).children('td.card-count');
+                    var newCount = parseInt(count.html()) + 1;
+                    count.html(newCount);
+                    cardIds.push(parseInt($(e).children('input[type=hidden]').val()));
+                });
                 $.ajax({
                     type: "POST",
                     url: '<%= add_card_path %>',
-                    data: JSON.stringify({ card_id:  getCardToSave() }),
+                    data: JSON.stringify({ card_id:  cardIds }),
                     dataType: "json",
                     headers: {
                         "Content-Type": "application/json",
@@ -270,7 +278,6 @@
                 var quality = e.children('td.card-quality').html();
                 var addButton = e.children('td.add-card').children('a');
                 var deleteButton = e.children('td.delete-card').children('a');
-
                 displayButtons(addButton, deleteButton, quality, count);
             });
         }
@@ -285,13 +292,6 @@
             handlingDeleteCard();
             addAll();
             $('select').material_select();
-            $('.card-line').tooltip({
-                delay: 50,
-                open: function( event, ui ) {
-                    console.log('event' + event);
-                    console.log('ui' + ui);
-                }
-            });
             initButtons();
         });
     }(window.jQuery, window, document));
