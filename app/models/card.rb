@@ -10,7 +10,7 @@ class Card < ActiveRecord::Base
   scope :in_collection_of, ->(user_id = nil) { 
     joins(:collections)
     .where('collections.user_id' => user_id)
-    .group('collections.card_id')
+    .group('cards.id')
     .select('cards.*, count(*) as total')
     .having((user_id.is_a? Integer) ? '' : 'count(*) > 1') unless user_id.nil?
   }
