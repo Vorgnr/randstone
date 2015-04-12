@@ -1,39 +1,39 @@
-<h2>Pick heroes</h2>
+<h5>Pick heroes</h5>
 
 <p class="hero-alert" style="display:none;">
-    pls pick hero
+  pls pick hero
 </p>
 
 <div class="row">
-    <%= form_tag(decks_new_add_hero_path, method: 'post', id: 'heroPicker', class: "col s12") do %>
-        <% @heroes.each do |hero| %>
-            <p>
-                <%= radio_button_tag 'hero', hero.id %>
-                <%= label_tag('hero_' + hero.id.to_s,  hero.name)  %>
-            </p>
-        <% end %>
-        <input id="pickHeroes" type="submit" value="next">
-    <% end %>
+  <%= form_tag(decks_new_add_hero_path, method: 'post', id: 'heroPicker', class: "col s12") do %>
+  <% @heroes.each do |hero| %>
+  <p>
+    <%= radio_button_tag 'hero', hero.id %>
+    <%= label_tag('hero_' + hero.id.to_s,  hero.name)  %>
+  </p>
+  <% end %>
+  <input id="pickHeroes" type="submit" value="next">
+  <% end %>
 </div>
 
 <script>
-    (function($, window, document) {
-        var validateHero = function() {
-            $('form#heroPicker').submit(function(e) {
-                var selectedHero = $('input:checked[name=hero]');
-                if(!selectedHero.length || !selectedHero.val().length) {
-                    e.preventDefault();
-                    warnUser();
-                }
-            })
-        };
+  (function($, window, document) {
+    var validateHero = function() {
+      $('form#heroPicker').submit(function(e) {
+        var selectedHero = $('input:checked[name=hero]');
+        if(!selectedHero.length || !selectedHero.val().length) {
+          e.preventDefault();
+          warnUser();
+        }
+      })
+    };
 
-        var warnUser = function() {
-            $('p.hero-alert').show();
-        };
+    var warnUser = function() {
+      $('p.hero-alert').show();
+    };
 
-        $(function() {
-            validateHero();
-        });
-    }(window.jQuery, window, document));
+    $(function() {
+      validateHero();
+    });
+  }(window.jQuery, window, document));
 </script>

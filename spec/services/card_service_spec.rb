@@ -31,14 +31,12 @@ RSpec.describe CardService, type: :service do
   end
 
   describe 'clean_total' do
-    context '' do
-      it '' do
-        expect { dummy_service.clean_total(0) }.to raise_error
-        expect { dummy_service.clean_total(1) }.to raise_error
-        expect(dummy_service.clean_total(2)).to eq 1
-        expect(dummy_service.clean_total(3)).to eq 1
-        expect(dummy_service.clean_total(4)).to eq 2
-      end
+    it 'should return expected clean total' do
+      expect { dummy_service.clean_total(0) }.to raise_error
+      expect { dummy_service.clean_total(1) }.to raise_error
+      expect(dummy_service.clean_total(2)).to eq 1
+      expect(dummy_service.clean_total(3)).to eq 1
+      expect(dummy_service.clean_total(4)).to eq 2
     end
   end
 end

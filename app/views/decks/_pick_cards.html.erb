@@ -1,39 +1,39 @@
 <h5>Pick cards</h5>
 
 <div class="row">
-    <div class="col s12">
-         <%= form_tag(decks_new_add_card_path, method: 'post', id: 'cardsPicker') do %>
-             <% @cards.each do |card| %>
-                 <p>
-                     <%= radio_button_tag 'card', card.id %>
-                     <%= label_tag('card_' + card.id.to_s, card.name)  %>
-                 </p>
-             <% end %>
-             <button class="btn waves-effect waves-light" type="submit">Next
-                 <i class="mdi-content-send right"></i>
-             </button>
-         <% end %>   
+  <div class="col s12">
+   <%= form_tag(decks_new_add_card_path, method: 'post', id: 'cardsPicker') do %>
+   <div class="row">
+     <% @cards.each do |card| %>
+     <div class="col s4">
+      <input type="hidden" value="<%= card.id %>" />
+      <%= image_tag medium_card_image_path(card.image), class: "card-choice pointer"  %>
     </div>
+    <% end %>
+  </div>
+  <% end %>   
+</div>
 </div>
 
 <script>
-    (function($, window, document) {
-        var validateCard = function() {
-            $('form#cardsPicker').submit(function(e) {
-                var selectedCard = $('input:checked[name=card]');
-                if(!selectedCard.length || !selectedCard.val().length) {
-                    e.preventDefault();
-                    warnUser();
-                }
-            })
-        };
+  (function($, window, document) {
+    var pickCard = function() {
+      $('.card-choice').click(function() {
+        var cardId = $(this).siblings('input[type=hidden]').val();
+        $('<input />').attr('type', 'hidden')
+        .attr('name', "card")
+        .attr('value', cardId)
+        .appendTo('#cardsPicker');
+        $('#cardsPicker').trigger('submit');
+      });
+    };
 
-        var warnUser = function() {
-            $('p.hero-alert').show();
-        };
+    var warnUser = function() {
+      $('p.hero-alert').show();
+    };
 
-        $(function() {
-            validateCard();
-        });
-    }(window.jQuery, window, document));
+    $(function() {
+      pickCard();
+    });
+  }(window.jQuery, window, document));
 </script>

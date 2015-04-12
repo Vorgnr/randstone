@@ -8,6 +8,7 @@ class DecksController < ApplicationController
 
   def show
     @deck = Deck.find(params[:id])
+    set_mana_curve
   end
 
   def new

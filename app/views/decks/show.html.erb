@@ -1,5 +1,10 @@
-<h1>View Deck</h1>
+<h3>View Deck</h3>
 
-<% @deck.cards.each do |card| %>
-    <p><%= card.name %>, <%= card.attack %> / <%= card.health %></p>
-<% end %>
+<div class="row">
+    <div class="col s6">
+        <%= render partial: 'mana_curve' %>
+    </div>
+    <div class="col s6">
+        <%= render partial: 'deck_thumbnails', locals: { cards: @card_with_count }%>
+    </div>
+</div>

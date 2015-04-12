@@ -1,6 +1,23 @@
-<h2>Pick opponent</h2>
+<h5>Pick opponent</h5>
 
 <%= form_tag(decks_new_add_opponent_path, method: 'post') do %>
-    <%= select("opponent", "id", @opponents.collect {|u| [u.name, u.id]}, {:include_blank => 'None'}) %>
-    <input id="addOpponent" type="submit" value="next">
+<div class="row">
+  <div class="input-field">
+    <%= select("opponent", "id", @opponents.collect {|u| [u.name, u.id]}, {:include_blank => 'None'}, class: "browser-default") %>
+  </div>
+</div>
+
+<div class="row">
+  <button class="btn waves-effect waves-light" type="submit">Next
+    <i class="mdi-content-send right"></i>
+  </button>   
+</div>
 <% end %>
+
+<script>
+  (function($, window, document) {
+    $(function() {
+      $('select').material_select();
+    });
+  }(window.jQuery, window, document));
+</script>
