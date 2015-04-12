@@ -42,12 +42,9 @@ gem 'rails_12factor'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-group :production, :staging do
-  gem "pg"
-end
+gem "pg"
 
 group :development, :test do
-  gem 'mysql2'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
   gem 'rspec-rails'
