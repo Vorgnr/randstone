@@ -16,13 +16,17 @@
 
 @import "materialize";
 
-$menu-width: 240px;
-$container-width: 85%;
+$menu-width: 200px;
+$container-width: 95%;
 
 header, main, footer {
     &.with-padding-left {
         padding-left: $menu-width;
     }
+}
+
+.side-nav {
+    width: $menu-width;
 }
 
 .container {
@@ -41,7 +45,7 @@ header, main, footer {
     border-radius: 6px 6px 6px 6px;
     background-position: -65px -100px;
     background-size: 255px auto;
-    width: 21%;
+    width: 122px;
     float: right;
 }
 

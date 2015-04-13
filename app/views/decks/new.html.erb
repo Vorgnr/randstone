@@ -1,7 +1,7 @@
 <h3>Creating deck</h3>
 
 <div class="row">
-  <div class="col s6">
+  <div class="col s7">
     <div class="row">
       <div class="col s12">
         <% if @deck.pick_opponent? %>
@@ -20,7 +20,7 @@
     </div>
 
   </div>
-  <div class="col s6">
+  <div class="col s5">
     <%= render partial: 'deck_thumbnails', locals: { cards: @card_with_count }%>
   </div>
 </div>
