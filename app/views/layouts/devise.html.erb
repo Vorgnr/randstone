@@ -11,6 +11,20 @@
         <%= yield %>
     </div>
 </main>
+<script>
+  (function($, window, document) {
 
+    var toastHandler = function() {
+      <% flash.each do |key, value| %>
+        Materialize.toast('<%= value %>', 7000, '<%= key %>');
+      <% end %>
+    };
+
+    $(function() {
+      toastHandler();
+    });
+
+  }(window.jQuery, window, document));
+</script>
 </body>
 </html>
