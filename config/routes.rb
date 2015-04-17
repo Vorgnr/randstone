@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   post 'decks/new/add_hero', to: 'decks#add_hero'
   post 'decks/new/add_card', to: 'decks#add_card'
   get '/my-collection', to: 'users#cards'
-  post '/get_cards', to: 'users#get_cards'
   post '/add_card', to: 'users#add_card'
   post '/delete_card', to: 'users#delete_card'
+  post '/get_cards', to: 'users#get_cards', default: { format: :json }
 end

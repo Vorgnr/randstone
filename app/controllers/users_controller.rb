@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:index, :show, :edit, :update, :destroy, :cards, :add_card, :delete_card, :get_cards]
-  respond_to :html
 
   # GET /users
   # GET /users.json
@@ -59,10 +58,6 @@ class UsersController < ApplicationController
 
   def get_cards()
     @cards = Card.all_with_collection_of(@user.id, params[:limit], params[:offset])
-
-    respond_to do |format|
-      format.json { render json: {  cards: @cards } }
-    end
   end
 
   def cards

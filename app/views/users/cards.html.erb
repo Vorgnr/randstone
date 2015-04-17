@@ -10,41 +10,57 @@
   </div>
 </div>
 
-<div id="cardContainer" class="row">
-</div>
+<div id="cardContainer" class="row"></div>
 
 <script>
-  (function($, window, document) {
+  (function($, window, document, Randstone) {
+
+    var isBusyLoading = false;
+    var scrollCount = 0;
 
     var getCardsFilters = function() {
       return {
-        offset: 0,
-        limit: 20
+        offset: scrollCount * Randstone.cardCollections.pagination.limit,
+        limit: Randstone.cardCollections.pagination.limit
       }
     }
 
-    var getCards = function() {
-      $.ajax({
-        type: 'post',
-        url: '<%= get_cards_path %>',
-        data: JSON.stringify(getCardsFilters()),
-        dataType: "json",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        },
-        success: function(data) {
-          data.cards.forEach(function(c) {
-            var x = asset_path(c.image + '.png')
-            $('<div class="col half-s3">'+ x +'</div>').appendTo('#cardContainer')
-          });
-        } 
+    var appendCard = function(cards) {
+      cards.forEach(function(c) {
+        $('<div class="col half-s3"><img src="'+ c.image +'"/></div>').appendTo('#cardContainer')
       });
+      endLoadingCards();
+    };
+
+    var endLoadingCards = function() {
+      isBusyLoading = false;
+      scrollCount++;
     }
+
+    var getCards = function() {
+      isBusyLoading = true;
+      Randstone.ajax('<%= get_cards_path %>', 
+        getCardsFilters(),
+        appendCard
+      );
+    };
+
+    var isScrollBottom = function() {
+      return $(window).scrollTop() >= $('#cardContainer').offset().top + $('#cardContainer').outerHeight() - window.innerHeight - Randstone.image.medium.height;
+    };
+
+    var scrollPaginateHandler = function() {
+      $(window).on('scroll', function() {
+        if(isScrollBottom() && !isBusyLoading) {
+          getCards();
+        }
+      });
+    };
 
     $(function() {
       getCards();
+      scrollPaginateHandler();
     });
 
-  }(window.jQuery, window, document));
+  }(window.jQuery, window, document, window.Randstone));
 </script>
