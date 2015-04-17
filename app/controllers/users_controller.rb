@@ -57,7 +57,7 @@ class UsersController < ApplicationController
   end
 
   def get_cards()
-    @cards = Card.all_with_collection_of(@user.id, params[:limit], params[:offset])
+    @cards = Card.with_name(params[:name]).all_with_collection_of(@user.id, params[:limit], params[:offset])
   end
 
   def cards

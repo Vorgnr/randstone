@@ -15,30 +15,59 @@
 <script>
   (function($, window, document, Randstone) {
 
+    var cardContainer = "#cardContainer";
+    var nameFilter = "#nameFilter";
     var isBusyLoading = false;
     var scrollCount = 0;
 
     var getCardsFilters = function() {
+      var nameInput = $(nameFilter).val();
+      if(nameInput.length)
+        var name = nameInput.toLowerCase()
+
       return {
         offset: scrollCount * Randstone.cardCollections.pagination.limit,
-        limit: Randstone.cardCollections.pagination.limit
+        limit: Randstone.cardCollections.pagination.limit,
+        name: name
       }
-    }
+    };
+
+    var clearCards = function() {
+      $(cardContainer).empty();
+      scrollCount = 0;
+    };
+
+    var nameFilterHandler = function() {
+      $(nameFilter).on('input', function() {
+        Randstone.delay(function() {
+          clearCards();
+          getCards();
+        }, 700)
+      });
+    };
+
+    var appendInput = function(card) {
+      return '<input type="hidden" class="card-id" value="' + card.id + '" />'
+    };
 
     var appendCard = function(cards) {
       cards.forEach(function(c) {
-        $('<div class="col half-s3"><img src="'+ c.image +'"/></div>').appendTo('#cardContainer')
+        $('<div class="col half-s3">' + appendInput(c) + '<img src="'+ c.image +'"/></div>').appendTo(cardContainer)
       });
       endLoadingCards();
+    };
+
+    var startLoadingCards = function() {
+      isBusyLoading = true;
     };
 
     var endLoadingCards = function() {
       isBusyLoading = false;
       scrollCount++;
-    }
+    };
 
     var getCards = function() {
-      isBusyLoading = true;
+      startLoadingCards();
       Randstone.ajax('<%= get_cards_path %>', 
         getCardsFilters(),
         appendCard
@@ -46,7 +75,7 @@
     };
 
     var isScrollBottom = function() {
-      return $(window).scrollTop() >= $('#cardContainer').offset().top + $('#cardContainer').outerHeight() - window.innerHeight - Randstone.image.medium.height;
+      return $(window).scrollTop() >= $(cardContainer).offset().top + $(cardContainer).outerHeight() - window.innerHeight - Randstone.image.medium.height;
     };
 
     var scrollPaginateHandler = function() {
@@ -60,6 +89,7 @@
     $(function() {
       getCards();
       scrollPaginateHandler();
+      nameFilterHandler();
     });
 
   }(window.jQuery, window, document, window.Randstone));

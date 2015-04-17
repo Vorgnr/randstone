@@ -14,6 +14,7 @@ class Card < ActiveRecord::Base
     .select('cards.*, count(*) as total')
     .having((user_id.is_a? Integer) ? '' : 'count(*) > 1') unless user_id.nil?
   }
+
   scope :all_with_collection_of, ->(user_id, limit = 20, offset = 0) {
     joins("left outer join collections on collections.card_id = cards.id and collections.user_id = #{user_id}")
     .group('cards.id')
@@ -23,6 +24,9 @@ class Card < ActiveRecord::Base
     .offset(offset)
   }
 
+  scope :with_name, ->(name = nil) {
+    where("cards.name ILIKE ?", "%#{name}%") unless name.nil?
+  }
   scope :with_qualities, ->(qualities = nil) { where(quality: qualities) unless qualities.nil? }
   scope :with_hero, ->(hero_id = nil) { where(hero_id: [nil, hero_id]) unless hero_id.nil? }
 
