@@ -29,6 +29,13 @@ class Card < ActiveRecord::Base
   }
   scope :with_qualities, ->(qualities = nil) { where(quality: qualities) unless qualities.nil? }
   scope :with_hero, ->(hero_id = nil) { where(hero_id: [nil, hero_id]) unless hero_id.nil? }
+  scope :filter_by_hero, ->(hero_id = "All") {
+    if hero_id.empty?
+      where("cards.hero_id is null")
+    else
+      where(hero_id: hero_id) unless hero_id == "All"
+    end
+  }
 
   def self.random_nuplet(n, cards)
     raise('Not enough card') if cards.nil? || cards.length < n

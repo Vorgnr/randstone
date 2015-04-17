@@ -3,10 +3,30 @@
 <div class="row">
   <div class="col s12">
     <h5> Filters </h5>
-    <div class="input-field col s12">
+    <div class="input-field col s4">
       <input id="nameFilter" type="text">
       <label for="nameFilter">Name</label>
     </div>
+
+    <div class="col s4">
+        <div class="input-field">
+            <select id="heroFilter">
+                <option value="All">All</option>
+                <option value="">Common</option>
+                <option value="1">Warrior</option>
+                <option value="2">Paladin</option>
+                <option value="3">Hunter</option>
+                <option value="4">Rogue</option>
+                <option value="5">Priest</option>
+                <option value="11">Druid</option>
+                <option value="7">Shaman</option>
+                <option value="8">Mage</option>
+                <option value="9">Demonist</option>
+            </select>
+            <label>Hero</label>
+        </div>
+    </div>
+
   </div>
 </div>
 
@@ -17,18 +37,21 @@
 
     var cardContainer = "#cardContainer";
     var nameFilter = "#nameFilter";
+    var heroFilter = "#heroFilter";
     var isBusyLoading = false;
     var scrollCount = 0;
 
-    var getCardsFilters = function() {
+    var getNameFilterValue = function() {
       var nameInput = $(nameFilter).val();
-      if(nameInput.length)
-        var name = nameInput.toLowerCase()
+      return !!nameInput.length ? nameInput.toLowerCase() : undefined
+    }
 
+    var getCardsFilters = function() {
       return {
         offset: scrollCount * Randstone.cardCollections.pagination.limit,
         limit: Randstone.cardCollections.pagination.limit,
-        name: name
+        name: getNameFilterValue(),
+        hero: $(heroFilter).val()
       }
     };
 
@@ -40,10 +63,20 @@
     var nameFilterHandler = function() {
       $(nameFilter).on('input', function() {
         Randstone.delay(function() {
-          clearCards();
-          getCards();
+          clearAndGetCards();
         }, 700)
       });
+    };
+
+    var heroFilterHandler = function() {
+      $(heroFilter).on('change', function() {
+        clearAndGetCards();
+      });
+    };
+
+    var clearAndGetCards = function() {
+      clearCards();
+      getCards();
     };
 
     var appendInput = function(card) {
@@ -87,9 +120,11 @@
     };
 
     $(function() {
+      $('select').material_select();
       getCards();
       scrollPaginateHandler();
       nameFilterHandler();
+      heroFilterHandler();
     });
 
   }(window.jQuery, window, document, window.Randstone));
