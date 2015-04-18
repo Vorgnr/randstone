@@ -27,6 +27,7 @@ class Card < ActiveRecord::Base
   scope :with_name, ->(name = nil) {
     where("cards.name ILIKE ?", "%#{name}%") unless name.nil?
   }
+
   scope :with_qualities, ->(qualities = nil) { where(quality: qualities) unless qualities.nil? }
   scope :with_hero, ->(hero_id = nil) { where(hero_id: [nil, hero_id]) unless hero_id.nil? }
   scope :filter_by_hero, ->(hero_id = "All") {
@@ -36,12 +37,17 @@ class Card < ActiveRecord::Base
       where(hero_id: hero_id) unless hero_id == "All"
     end
   }
+
   scope :filter_by_cost, ->(cost = "All") {
     if cost.to_i >= 7
       where("cost > ?", cost)
     else
       where(cost: cost) unless cost == "All"
     end
+  }
+  
+  scope :filter_by_set, ->(set = "All") {
+    where(set: set) unless set == "All"
   }
 
   def self.random_nuplet(n, cards)

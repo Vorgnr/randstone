@@ -44,6 +44,24 @@
         </div>
     </div>
 
+    <div class="col s3">
+        <div class="input-field">
+            <select id="setFilter">
+                <option value="All">All</option>
+                <option value="2">Base</option>
+                <option value="3">Classic</option>
+                <option value="4">Reward</option>
+                <option value="5">Missions</option>
+                <option value="11">Promotion</option>
+                <option value="12">Naxxramas</option>
+                <option value="13">Goblins vs Gnomes</option>
+                <option value="14">Blackrock Mountain</option>
+                <option value="16">Credits</option>
+            </select>
+            <label>Set</label>
+        </div>
+    </div>
+
   </div>
 </div>
 
@@ -56,6 +74,7 @@
     var nameFilter = "#nameFilter";
     var heroFilter = "#heroFilter";
     var costFilter = "#costFilter";
+    var setFilter = "#setFilter";
     var isBusyLoading = false;
     var scrollCount = 0;
 
@@ -70,7 +89,8 @@
         limit: Randstone.cardCollections.pagination.limit,
         name: getNameFilterValue(),
         hero: $(heroFilter).val(),
-        cost: $(costFilter).val()
+        cost: $(costFilter).val(),
+        set: $(setFilter).val()
       }
     };
 
@@ -98,6 +118,21 @@
         clearAndGetCards();
       });
     };
+
+    var setFilterHandler = function() {
+      $(setFilter).on('change', function() {
+        clearAndGetCards();
+      });
+    };
+
+    var selectFilterHandler = function(argument) {
+      var action = function() {
+        clearAndGetCards();
+      };
+      $(setFilter).change(action);
+      $(heroFilter).change(action);
+      $(costFilter).change(action);
+    }
 
     var clearAndGetCards = function() {
       clearCards();
@@ -148,9 +183,7 @@
       $('select').material_select();
       getCards();
       scrollPaginateHandler();
-      nameFilterHandler();
-      heroFilterHandler();
-      costFilterHandler();
+      selectFilterHandler();
     });
 
   }(window.jQuery, window, document, window.Randstone));

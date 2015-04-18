@@ -62,6 +62,7 @@ class UsersController < ApplicationController
       .with_name(params[:name])
       .filter_by_cost(params[:cost])
       .filter_by_hero(params[:hero])
+      .filter_by_set(params[:set])
       .all_with_collection_of(@user.id, params[:limit], params[:offset])
   end
 
