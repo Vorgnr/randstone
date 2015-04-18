@@ -3,12 +3,12 @@
 <div class="row">
   <div class="col s12">
     <h5> Filters </h5>
-    <div class="input-field col s4">
+    <div class="input-field col s3">
       <input id="nameFilter" type="text">
       <label for="nameFilter">Name</label>
     </div>
 
-    <div class="col s4">
+    <div class="col s3">
         <div class="input-field">
             <select id="heroFilter">
                 <option value="All">All</option>
@@ -27,6 +27,23 @@
         </div>
     </div>
 
+    <div class="col s3">
+        <div class="input-field">
+            <select id="costFilter">
+                <option value="All">All</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7+</option>
+            </select>
+            <label>Cost</label>
+        </div>
+    </div>
+
   </div>
 </div>
 
@@ -38,6 +55,7 @@
     var cardContainer = "#cardContainer";
     var nameFilter = "#nameFilter";
     var heroFilter = "#heroFilter";
+    var costFilter = "#costFilter";
     var isBusyLoading = false;
     var scrollCount = 0;
 
@@ -51,7 +69,8 @@
         offset: scrollCount * Randstone.cardCollections.pagination.limit,
         limit: Randstone.cardCollections.pagination.limit,
         name: getNameFilterValue(),
-        hero: $(heroFilter).val()
+        hero: $(heroFilter).val(),
+        cost: $(costFilter).val()
       }
     };
 
@@ -65,6 +84,12 @@
         Randstone.delay(function() {
           clearAndGetCards();
         }, 700)
+      });
+    };
+
+    var costFilterHandler = function() {
+      $(costFilter).on('change', function() {
+        clearAndGetCards();
       });
     };
 
@@ -125,6 +150,7 @@
       scrollPaginateHandler();
       nameFilterHandler();
       heroFilterHandler();
+      costFilterHandler();
     });
 
   }(window.jQuery, window, document, window.Randstone));

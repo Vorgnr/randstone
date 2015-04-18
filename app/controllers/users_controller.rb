@@ -60,6 +60,7 @@ class UsersController < ApplicationController
     puts params[:hero].empty?
     @cards = Card
       .with_name(params[:name])
+      .filter_by_cost(params[:cost])
       .filter_by_hero(params[:hero])
       .all_with_collection_of(@user.id, params[:limit], params[:offset])
   end

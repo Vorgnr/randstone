@@ -36,6 +36,13 @@ class Card < ActiveRecord::Base
       where(hero_id: hero_id) unless hero_id == "All"
     end
   }
+  scope :filter_by_cost, ->(cost = "All") {
+    if cost.to_i >= 7
+      where("cost > ?", cost)
+    else
+      where(cost: cost) unless cost == "All"
+    end
+  }
 
   def self.random_nuplet(n, cards)
     raise('Not enough card') if cards.nil? || cards.length < n
