@@ -9,17 +9,11 @@ var Randstone = {
         pagination: {
             offset: 0,
             limit: 20,
-            initialLineNumber: 4,
-            getCards: function(url, offset, limit, callback) {
-                Randstone.ajax(url, {
-                    offset: offset,
-                    limit: limit
-                }, callback);
-            }
+            initialLineNumber: 4
         }
     },
-    ajax: function(url, data, success, error) {
-        $.ajax({
+    ajax: function(url, data) {
+        return $.ajax({
             type: 'post',
             url: url,
             data: JSON.stringify(data),
@@ -27,8 +21,7 @@ var Randstone = {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            },
-            success: success
+            }
         });
     },
     delay: (function(){

@@ -141,21 +141,23 @@
 
     var appendButton = function(card) {
       var count = '<span class="badge-total">' + card.total + '</span>'
-      var add = '<button class="btn-flat"><i class="mdi-content-add"></i></button>';
-      var remove = '<button class="btn-flat"><i class="mdi-content-remove"></i></button>';
-      return '<div class="center-align">' + remove + count + add + '</div>';
+      var add = '<button data-role="add-card" class="btn-flat"><i class="mdi-content-add"></i></button>';
+      var remove = '<button data-role="remove-card" class="btn-flat"><i class="mdi-content-remove"></i></button>';
+      return '<div data-role="card-controller" class="center-align">' + appendInput(card) + remove + count + add + '</div>';
     };
 
     var appendInput = function(card) {
-      return '<input type="hidden" class="card-id" value="' + card.id + '" />'
+      var quality = '<input type="hidden" data-role="card-quality" value="'+ card.quality +'" />'
+      return  quality + '<input type="hidden" data-role="card-id" value="' + card.id + '" />'
     };
 
     var appendCard = function(cards) {
       var cardsElement = "";
       cards.forEach(function(c) {
-        cardsElement += '<div class="col half-s3">' + appendInput(c) + '<img class="responsive-img" src="'+ c.image +'"/>' + appendButton(c) +'</div>';
+        cardsElement += '<div class="col half-s3"><img class="responsive-img" src="'+ c.image +'"/>' + appendButton(c) +'</div>';
       });
       $(cardContainer).append(cardsElement);
+      initButtons();
       endLoadingCards();
     };
 
@@ -171,9 +173,8 @@
     var getCards = function() {
       startLoadingCards();
       Randstone.ajax('<%= get_cards_path %>', 
-        getCardsFilters(),
-        appendCard
-      );
+        getCardsFilters()
+      ).done(appendCard);
     };
 
     var isScrollBottom = function() {
@@ -188,12 +189,88 @@
       });
     };
 
+    var addOneCardHandler = function() {
+      $(cardContainer).on("click", "button[data-role=add-card]", function() {
+        var addButton = $(this);
+        var cardId = addButton.siblings("input[data-role=card-id]").val();
+        var quality = addButton.siblings('input[data-role=card-quality]').val();
+        var count =  addButton.siblings('span.badge-total');
+        var deleteButton = addButton.siblings('button[data-role=remove-card]');
+
+        Randstone.ajax('<%= add_card_path %>', 
+          { card_id:  cardId }).done(function() {
+            var newCount = parseInt(count.html()) + 1;
+            count.html(newCount);
+            disableButtons(addButton, deleteButton, quality, newCount);
+          });
+      });
+    };
+
+    var initButtons = function() {
+      $("div[data-role=card-controller]").each(function() {
+          var element = $(this);
+          var quality = element.children('input[data-role=card-quality]').val();
+          var count =  element.children('span.badge-total').html();
+          var deleteButton = element.children('button[data-role=remove-card]');
+          var addButton = element.children('button[data-role=add-card]');
+          console.log(deleteButton);
+          console.log(addButton);
+          disableButtons(addButton, deleteButton, quality, count);
+      });
+    };
+
+    var removeOneCardHandler = function() {
+      $(cardContainer).on("click", "button[data-role=remove-card]", function() {
+        var deleteButton = $(this);
+        var cardId = deleteButton.siblings("input[data-role=card-id]").val();
+        var quality = deleteButton.siblings('input[data-role=card-quality]').val();
+        var count =  deleteButton.siblings('span.badge-total');
+        var addButton = deleteButton.siblings('button[data-role=add-card]');
+
+        Randstone.ajax('<%= delete_card_path %>', 
+          { card_id:  cardId }).done(function() {
+            var newCount = parseInt(count.html()) - 1;
+            count.html(newCount);
+            disableButtons(addButton, deleteButton, quality, newCount);
+          });
+      });
+    }; 
+
+    var disableOneButton = function(button) {
+      button.addClass("disabled");
+      button.prop("disabled", true);
+    };
+
+    var enableOneButton = function(button) {
+      button.removeClass("disabled");
+      button.prop("disabled", false);
+    };
+
+    var disableButtons = function(addBtn, deleteBtn, quality, count) {
+        enableOneButton(addBtn);
+        enableOneButton(deleteBtn);
+
+        if (quality === 'legendary') {
+            if (count > 0) {
+                disableOneButton(addBtn);
+            } else {
+                disableOneButton(deleteBtn);
+            }
+        } else if (count >= 2) {
+            disableOneButton(addBtn);
+        } else if (count <= 0) {
+            disableOneButton(deleteBtn);
+        }
+    };
+
     $(function() {
       $('select').material_select();
       getCards();
       nameFilterHandler();
       scrollPaginateHandler();
       selectFilterHandler();
+      addOneCardHandler();
+      removeOneCardHandler();
     });
 
   }(window.jQuery, window, document, window.Randstone));
