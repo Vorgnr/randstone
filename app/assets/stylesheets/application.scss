@@ -10,14 +10,11 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
  *= require_self
  */
 
+@import "variables";
 @import "materialize";
-
-$menu-width: 200px;
-$container-width: 95%;
 
 header, main, footer {
     &.with-padding-left {
@@ -60,4 +57,18 @@ header, main, footer {
 .row .col.half-s3 {
   width: 20%;
   margin-left: 0;
+}
+
+.btn .btn-small {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+span.badge-total {
+  min-width: 3rem;
+  padding: 0 6px;
+  text-align: center;
+  font-size: 1rem;
+  line-height: inherit;
+  color: $text-color-light;
 }

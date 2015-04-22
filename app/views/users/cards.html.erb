@@ -132,11 +132,18 @@
       $(setFilter).change(action);
       $(heroFilter).change(action);
       $(costFilter).change(action);
-    }
+    };
 
     var clearAndGetCards = function() {
       clearCards();
       getCards();
+    };
+
+    var appendButton = function(card) {
+      var count = '<span class="badge-total">' + card.total + '</span>'
+      var add = '<button class="btn-flat"><i class="mdi-content-add"></i></button>';
+      var remove = '<button class="btn-flat"><i class="mdi-content-remove"></i></button>';
+      return '<div class="center-align">' + remove + count + add + '</div>';
     };
 
     var appendInput = function(card) {
@@ -146,8 +153,7 @@
     var appendCard = function(cards) {
       var cardsElement = "";
       cards.forEach(function(c) {
-        // cardsElement +='<div class="col half-s3 card-img" style="background-image: url('+ c.image +');">' + appendInput(c) + '</div>'
-        cardsElement += '<div class="col half-s3">' + appendInput(c) + '<img src="'+ c.image +'"/></div>';
+        cardsElement += '<div class="col half-s3">' + appendInput(c) + '<img class="responsive-img" src="'+ c.image +'"/>' + appendButton(c) +'</div>';
       });
       $(cardContainer).append(cardsElement);
       endLoadingCards();
@@ -185,6 +191,7 @@
     $(function() {
       $('select').material_select();
       getCards();
+      nameFilterHandler();
       scrollPaginateHandler();
       selectFilterHandler();
     });
