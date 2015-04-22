@@ -39,7 +39,6 @@ header, main, footer {
 
 .card-thumbnail {
     background-repeat: no-repeat;
-    background-position: -65px -100px;
     height: 10%;
     right: 0px;
     border-radius: 6px 6px 6px 6px;
@@ -47,6 +46,11 @@ header, main, footer {
     background-size: 255px auto;
     width: 122px;
     float: right;
+}
+
+.card-img {
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
 
 .card-thumbnail-count {

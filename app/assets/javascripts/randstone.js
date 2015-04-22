@@ -2,7 +2,7 @@
 var Randstone = {
     image: {
         medium: {
-            height: 303
+            height: 270
         }
     },
     cardCollections: {

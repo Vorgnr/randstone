@@ -95,6 +95,7 @@ GEM
     materialize-sass (0.96.1)
       sass (~> 3.3)
     mime-types (2.4.3)
+    mini_magick (4.2.3)
     mini_portile (0.6.2)
     minitest (5.5.1)
     multi_json (1.11.0)
@@ -214,6 +215,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   materialize-sass
+  mini_magick
   pg
   rails (= 4.2.0)
   rails_12factor

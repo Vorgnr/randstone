@@ -144,9 +144,12 @@
     };
 
     var appendCard = function(cards) {
+      var cardsElement = "";
       cards.forEach(function(c) {
-        $('<div class="col half-s3">' + appendInput(c) + '<img src="'+ c.image +'"/></div>').appendTo(cardContainer)
+        // cardsElement +='<div class="col half-s3 card-img" style="background-image: url('+ c.image +');">' + appendInput(c) + '</div>'
+        cardsElement += '<div class="col half-s3">' + appendInput(c) + '<img src="'+ c.image +'"/></div>';
       });
+      $(cardContainer).append(cardsElement);
       endLoadingCards();
     };
 
