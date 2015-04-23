@@ -44,7 +44,3 @@ json.each do |c, i|
     :image => c['image']
   })
 end
-
-baseCards = Card.where(quality: 'base')
-arnaud = User.create! :name => 'arnaud', :email => 'arnaud@test.com', :password => '12345678', :password_confirmation => '12345678'
-arnaud.cards << baseCards + baseCards
