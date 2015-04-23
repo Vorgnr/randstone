@@ -8,6 +8,13 @@ class User < ActiveRecord::Base
 
   has_many :decks
 
+  after_create :set_basic_cards
+
+  def set_basic_cards
+    basic = Card.where(set: 2)
+    self.cards << basic + basic
+  end
+
   def has_pending_deck?
     return self.current_deck != nil
   end
