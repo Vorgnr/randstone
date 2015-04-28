@@ -199,6 +199,53 @@ RSpec.describe Card, type: :model do
       end
     end
   end
+
+  describe 'all_with_collection_of' do
+    it 'should return all card' do
+      user = create(:user)
+      cards = 5.times.map { create(:card) }
+      expect(Card.all_with_collection_of(user.id).length).to eq 5
+    end
+
+    it 'should return a total column' do
+      user = create(:user)
+      cards = 5.times.map { create(:card) }
+      expect(Card.all_with_collection_of(user.id).first.total).to eq 0
+    end
+
+    it 'should correctly count card in user\'s collection' do
+      user = create(:user)
+      cards = 5.times.map { create(:card) }
+      user.cards << [cards[0], cards[0], cards[1]]
+      all_card_and_user_collection = Card.all_with_collection_of(user.id)
+      expect(all_card_and_user_collection.find(cards[0]).total).to eq 2
+      expect(all_card_and_user_collection.find(cards[1]).total).to eq 1
+    end
+  end
+
+  describe 'all_that_user_can_add' do
+    context 'when not used with with_qualities filer' do
+      context 'when user has one legendary card' do
+        it 'should return all legendary except this one' do
+          user = create(:user)
+          cards = 5.times.map { create(:card, :with_legendary_quality) }
+          user.cards << cards.first
+          expect(Card.all_that_user_can_add(user.id).length).to eq 4
+        end
+      end
+    end
+    context 'when used with with_qualities filer' do
+      context 'when user has one legendary card' do
+        it 'should return all legendary except this one' do
+          user = create(:user)
+          cards = 5.times.map { create(:card, :with_legendary_quality) }
+          user.cards << cards.first
+          expect(Card.all_that_user_can_add(user.id).with_qualities(5).length).to eq 4
+          expect(Card.all_that_user_can_add(user.id).with_qualities(2).length).to eq 0
+        end
+      end
+    end
+  end
 end
 
 

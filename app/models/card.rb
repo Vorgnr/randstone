@@ -24,6 +24,13 @@ class Card < ActiveRecord::Base
     .offset(offset)
   }
 
+  scope :all_that_user_can_add, ->(user_id) {
+    joins("left outer join collections on collections.card_id = cards.id and collections.user_id = #{user_id}")
+    .group('cards.id')
+    .having('case when cards.quality = 5 then count(collections.card_id) = 0 else count(collections.card_id) < 2 end')
+    .select('cards.id')
+  }
+
   scope :with_name, ->(name = nil) {
     where("cards.name ILIKE ?", "%#{name}%") unless name.nil?
   }

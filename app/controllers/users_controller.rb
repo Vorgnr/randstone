@@ -21,7 +21,6 @@ class UsersController < ApplicationController
   end
 
   def get_cards()
-    puts params[:hero].empty?
     @cards = Card
       .with_name(params[:name])
       .filter_by_cost(params[:cost])
