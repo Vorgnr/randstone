@@ -10,6 +10,9 @@
         <button id="addAllCards" class="btn waves-effect waves-light">Add All Once
           <i class="mdi-content-add right"></i>
         </button>
+        <button id="removeAllCards" class="btn waves-effect waves-light">Remove All
+          <i class="mdi-content-remove right"></i>
+        </button>
       </div>
     </div>
     <div class="input-field col s3">
@@ -286,6 +289,21 @@
       });
     };
 
+    var removeAllHandler = function() {
+      $('#removeAllCards').click(function() {
+        if(!isBusyAddingCards){
+          isBusyAddingCards = true;
+          Randstone.ajax('<%= remove_all_path %>', 
+            getCardsFilters()
+          ).done(function(data) {
+            Materialize.toast(data.message, 5000, 'success');
+            clearAndGetCards();
+            isBusyAddingCards = false;
+          });
+        }
+      });
+    };
+
     $(function() {
       $('select').material_select();
       getCards();
@@ -295,6 +313,7 @@
       addOneCardHandler();
       removeOneCardHandler();
       addAllHandler();
+      removeAllHandler();
     });
 
   }(window.jQuery, window, document, window.Randstone));
