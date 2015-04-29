@@ -10,5 +10,6 @@ Rails.application.routes.draw do
   get '/my-collection', to: 'users#cards'
   post '/add_card', to: 'users#add_card'
   post '/delete_card', to: 'users#delete_card'
+  post '/add_all_once', to: 'users#add_all_once'
   post '/get_cards', to: 'users#get_cards', default: { format: :json }
 end

@@ -15,6 +15,11 @@ class Card < ActiveRecord::Base
     .having((user_id.is_a? Integer) ? '' : 'count(*) > 1') unless user_id.nil?
   }
 
+  scope :join_collection_of, ->(user_id) {
+    joins(:collections)
+    .where('collections.user_id' => user_id)
+  }
+
   scope :all_with_collection_of, ->(user_id, limit = 20, offset = 0) {
     joins("left outer join collections on collections.card_id = cards.id and collections.user_id = #{user_id}")
     .group('cards.id')

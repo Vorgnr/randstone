@@ -2,7 +2,16 @@
 
 <div class="row">
   <div class="col s12">
-    <h5> Filters </h5>
+    <div class="row">
+      <div class="col s6">
+        <h5> Filters </h5>
+      </div>
+      <div class="col s6">
+        <button id="addAllCards" class="btn waves-effect waves-light">Add All Once
+          <i class="mdi-content-add right"></i>
+        </button>
+      </div>
+    </div>
     <div class="input-field col s3">
       <input id="nameFilter" type="text">
       <label for="nameFilter">Name</label>
@@ -76,6 +85,7 @@
     var costFilter = "#costFilter";
     var setFilter = "#setFilter";
     var isBusyLoading = false;
+    var isBusyAddingCards = false;
     var scrollCount = 0;
 
     var getNameFilterValue = function() {
@@ -208,12 +218,12 @@
 
     var initButtons = function() {
       $("div[data-role=card-controller]").each(function() {
-          var element = $(this);
-          var quality = element.children('input[data-role=card-quality]').val();
-          var count =  element.children('span.badge-total').html();
-          var deleteButton = element.children('button[data-role=remove-card]');
-          var addButton = element.children('button[data-role=add-card]');
-          disableButtons(addButton, deleteButton, quality, count);
+        var element = $(this);
+        var quality = element.children('input[data-role=card-quality]').val();
+        var count =  element.children('span.badge-total').html();
+        var deleteButton = element.children('button[data-role=remove-card]');
+        var addButton = element.children('button[data-role=add-card]');
+        disableButtons(addButton, deleteButton, quality, count);
       });
     };
 
@@ -261,6 +271,21 @@
         }
     };
 
+    var addAllHandler = function() {
+      $('#addAllCards').click(function() {
+        if(!isBusyAddingCards){
+          isBusyAddingCards = true;
+          Randstone.ajax('<%= add_all_once_path %>', 
+            getCardsFilters()
+          ).done(function(data) {
+            Materialize.toast(data.message, 5000, 'success');
+            clearAndGetCards();
+            isBusyAddingCards = false;
+          });
+        }
+      });
+    };
+
     $(function() {
       $('select').material_select();
       getCards();
@@ -269,6 +294,7 @@
       selectFilterHandler();
       addOneCardHandler();
       removeOneCardHandler();
+      addAllHandler();
     });
 
   }(window.jQuery, window, document, window.Randstone));

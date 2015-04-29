@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:index, :show, :edit, :update, :destroy, :cards, :add_card, :delete_card, :get_cards]
+  before_action :set_user, only: [:index, :show, :edit, :update, :destroy, :cards, :add_card, :delete_card, :get_cards, :add_all_once]
 
   # GET /users
   # GET /users.json
@@ -30,6 +30,20 @@ class UsersController < ApplicationController
   end
 
   def cards
+  end
+
+  def add_all_once
+    @cards = Card
+      .with_name(params[:name])
+      .filter_by_cost(params[:cost])
+      .filter_by_hero(params[:hero])
+      .filter_by_set(params[:set])
+      .all_that_user_can_add(@user.id)
+
+    @user.cards << @cards
+    respond_to do |format|
+      format.json { render json: {  message: "#{@cards.length} card(s) added once" } }
+    end
   end
 
   def add_card
