@@ -82,7 +82,7 @@
 <script>
   (function($, window, document, Randstone) {
 
-    var cardContainer = "#cardContainer";
+    var cardContainer = $("#cardContainer");
     var nameFilter = "#nameFilter";
     var heroFilter = "#heroFilter";
     var costFilter = "#costFilter";
@@ -98,8 +98,8 @@
 
     var getCardsFilters = function() {
       return {
-        offset: scrollCount * Randstone.cardCollections.pagination.limit,
-        limit: Randstone.cardCollections.pagination.limit,
+        offset: scrollCount * Randstone.config.cardCollections.pagination.limit,
+        limit: Randstone.config.cardCollections.pagination.limit,
         name: getNameFilterValue(),
         hero: $(heroFilter).val(),
         cost: $(costFilter).val(),
@@ -108,7 +108,7 @@
     };
 
     var clearCards = function() {
-      $(cardContainer).empty();
+      cardContainer.empty();
       scrollCount = 0;
     };
 
@@ -169,7 +169,7 @@
       cards.forEach(function(c) {
         cardsElement += '<div class="col half-s3"><img class="responsive-img" src="'+ c.image +'"/>' + appendButton(c) +'</div>';
       });
-      $(cardContainer).append(cardsElement);
+      cardContainer.append(cardsElement);
       initButtons();
       endLoadingCards();
     };
@@ -191,19 +191,19 @@
     };
 
     var isScrollBottom = function() {
-      return $(window).scrollTop() >= $(cardContainer).offset().top + $(cardContainer).outerHeight() - window.innerHeight - Randstone.image.medium.height;
+      return $(window).scrollTop() >= cardContainer.offset().top + cardContainer.outerHeight() - window.innerHeight - Randstone.config.image.medium.height;
     };
 
     var scrollPaginateHandler = function() {
       $(window).on('scroll', function() {
-        if(isScrollBottom() && !isBusyLoading) {
+        if(cardContainer.length && isScrollBottom() && !isBusyLoading) {
           getCards();
         }
       });
     };
 
     var addOneCardHandler = function() {
-      $(cardContainer).on("click", "button[data-role=add-card]", function() {
+      cardContainer.on("click", "button[data-role=add-card]", function() {
         var addButton = $(this);
         var cardId = addButton.siblings("input[data-role=card-id]").val();
         var quality = addButton.siblings('input[data-role=card-quality]').val();
@@ -231,7 +231,7 @@
     };
 
     var removeOneCardHandler = function() {
-      $(cardContainer).on("click", "button[data-role=remove-card]", function() {
+      cardContainer.on("click", "button[data-role=remove-card]", function() {
         var deleteButton = $(this);
         var cardId = deleteButton.siblings("input[data-role=card-id]").val();
         var quality = deleteButton.siblings('input[data-role=card-quality]').val();
