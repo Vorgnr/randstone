@@ -37,4 +37,8 @@ Randstone.prototype.ajax = function(url, data) {
     });
 };
 
+Randstone.prototype.toast = function(message, key) {
+    Materialize.toast(message, 5000, key);
+};
+
 window.Randstone = new Randstone();

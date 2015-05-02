@@ -57,7 +57,7 @@ class UsersController < ApplicationController
 
     @user.cards.delete(@cards)
     respond_to do |format|
-      format.json { render json: {  message: "#{@cards.length} card(s) removed once" } }
+      format.json { render json: {  message: "#{@cards.length} card(s) removed" } }
     end
   end
 

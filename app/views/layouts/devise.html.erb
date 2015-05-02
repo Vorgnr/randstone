@@ -16,7 +16,7 @@
 
     var toastHandler = function() {
       <% flash.each do |key, value| %>
-        Materialize.toast('<%= value %>', 7000, '<%= key %>');
+        Randstone.toast('<%= value %>', '<%= key %>');
       <% end %>
     };
 

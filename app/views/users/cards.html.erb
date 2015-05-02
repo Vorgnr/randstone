@@ -281,7 +281,7 @@
           Randstone.ajax('<%= add_all_once_path %>', 
             getCardsFilters()
           ).done(function(data) {
-            Materialize.toast(data.message, 5000, 'success');
+            Randstone.toast(data.message, 'success');
             clearAndGetCards();
             isBusyAddingCards = false;
           });
@@ -296,7 +296,7 @@
           Randstone.ajax('<%= remove_all_path %>', 
             getCardsFilters()
           ).done(function(data) {
-            Materialize.toast(data.message, 5000, 'success');
+            Randstone.toast(data.message, 'success');
             clearAndGetCards();
             isBusyAddingCards = false;
           });
