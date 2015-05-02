@@ -246,6 +246,15 @@ RSpec.describe Card, type: :model do
       end
     end
   end
+
+  describe 'join_collection_of' do
+    it 'should filter by cards of user' do
+      user = create(:user)
+      cards = 5.times.map { create(:card) }
+      user.cards << [cards[0], cards[1]]
+      expect(Card.join_collection_of(user.id).length).to eq 2
+    end
+  end
 end
 
 
