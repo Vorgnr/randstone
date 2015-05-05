@@ -4,9 +4,7 @@
   <div class="col s7">
     <div class="row">
       <div class="col s12">
-        <% if @deck.pick_opponent? %>
-          <%= render partial: @deck.status, object: @opponents %>
-        <% elsif @deck.pick_hero? || @deck.hero_picked? %>
+        <% if @deck.pick_hero? || @deck.hero_picked? %>
           <%= render partial: 'pick_hero', object: @heroes %>
         <% elsif @deck.pick_cards? %>
           <%= render partial: @deck.status, object: @cards %>

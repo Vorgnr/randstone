@@ -4,7 +4,6 @@ Rails.application.routes.draw do
   resources :users
   resources :decks
   
-  post 'decks/new/add_opponent', to: 'decks#add_opponent'
   post 'decks/new/add_hero', to: 'decks#add_hero'
   post 'decks/new/add_card', to: 'decks#add_card'
   get '/my-collection', to: 'users#cards'

@@ -15,15 +15,17 @@ RSpec.describe DecksController, type: :controller do
   describe '#new' do
     context 'when user has no pending deck' do
       it 'should create @deck' do
+        9.times.map { create(:hero) }
         sign_in(user)
         get :new
         expect(assigns(:deck)).to be
       end
 
-      it "@deck's status should be pick_opponent" do
+      it "@deck's status should be hero_picked" do
+        9.times.map { create(:hero) }
         sign_in(user)
         get :new
-        expect(assigns(:deck).pick_opponent?).to be true
+        expect(assigns(:deck).hero_picked?).to be true
       end
     end
 
@@ -96,43 +98,6 @@ RSpec.describe DecksController, type: :controller do
           expect(assigns(:cards).length).to eq 3
         end
       end
-    end
-  end
-
-  describe '#add_opponent' do
-    context "when user's deck's status is not pick_opponent" do
-      it 'should raise error' do
-        sign_in(user_with_hero_picked_deck)
-        expect {
-          post :add_opponent, 
-            :opponent => { :id => "1" }
-        }.to raise_error
-      end
-    end
-
-    context "when opponent's id is empty" do
-      it "should set @deck's opponent_id to nil" do
-        opponent_id = ""
-        sign_in(user)
-        post :add_opponent, :opponent => { :id => opponent_id }
-        expect(assigns(:user).current_deck.opponent_id).to be nil
-      end
-    end
-
-    context "when opponent's id is nil" do
-      it "should set @deck's opponent_id to nil" do
-        opponent_id = nil
-        sign_in(user)
-        post :add_opponent, :opponent => { :id => opponent_id }
-        expect(assigns(:user).current_deck.opponent_id).to be nil
-      end
-    end
-
-    it "should update @deck's opponent" do
-      opponent = create(:user)
-      sign_in(user)
-      post :add_opponent, :opponent => { :id => opponent.id }
-      expect(assigns(:deck).opponent_id).to eq opponent.id
     end
   end
 

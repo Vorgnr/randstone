@@ -3,16 +3,12 @@ class Deck < ActiveRecord::Base
   has_and_belongs_to_many :cards
   belongs_to :hero
 
-  enum status: [ :pick_opponent, :pick_hero, :hero_picked, :pick_cards, :completed ]
+  enum status: [ :pick_hero, :hero_picked, :pick_cards, :completed ]
 
   after_initialize :defaults
 
   def defaults
-    self.status ||= 'pick_opponent'
-  end
-
-  def set_opponent(opponent_id)
-    self.update_attributes(:status => 'pick_hero', :opponent_id => opponent_id)
+    self.status ||= 'pick_hero'
   end
 
   def pick_heroes(heroes)
@@ -26,11 +22,11 @@ class Deck < ActiveRecord::Base
   end
 
   def self.current_users_deck(user_id)
-    return Deck.where(user_id: user_id).where.not(status: 4).first
+    return Deck.where(user_id: user_id).where.not(status: 3).first
   end
 
   def self.users_deck(user_id)
-    return Deck.where(user_id: user_id).where(status: 4)
+    return Deck.where(user_id: user_id).where(status: 3)
   end
 
   def current_cards_selection

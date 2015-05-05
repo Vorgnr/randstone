@@ -1,6 +1,6 @@
 class DecksController < ApplicationController
-  before_action :set_user, only: [:index, :new, :show, :add_opponent, :add_hero, :add_card]
-  before_action :set_deck, only: [:new, :add_opponent, :add_hero, :add_card]
+  before_action :set_user, only: [:index, :new, :show, :add_hero, :add_card]
+  before_action :set_deck, only: [:new, :add_hero, :add_card]
 
   def index
     @decks = Deck.users_deck(@user.id)
@@ -12,9 +12,7 @@ class DecksController < ApplicationController
   end
 
   def new
-    if @deck.pick_opponent?
-      set_opponents
-    elsif @deck.pick_hero?
+    if @deck.pick_hero?
       set_heroes
     elsif @deck.hero_picked?
       hero_selection = HeroSelection.find_by(deck_id: @deck.id)
@@ -24,7 +22,7 @@ class DecksController < ApplicationController
       if !card_selection.nil?
         @cards = Card.find(card_selection.values)
       else
-        @cards = Card.get_trio(user_id: @user.id, opponent_id: @deck.opponent_id, hero_id: @deck.hero_id, cards_in_deck: @deck.cards)
+        @cards = Card.get_trio(user_id: @user.id, hero_id: @deck.hero_id, cards_in_deck: @deck.cards)
         @deck.create_card_selection(@cards.map { |c| c.id })
       end
       set_mana_curve
@@ -60,13 +58,6 @@ class DecksController < ApplicationController
     redirect_to (@deck.completed?) ? decks_path : new_deck_path
   end
 
-  def add_opponent
-    raise "Unexpected deck's status" unless @deck.pick_opponent?
-    if @deck.set_opponent(params[:opponent][:id])
-      redirect_to new_deck_path
-    end
-  end
-
   def add_hero
     raise "Unexpected deck's status" unless @deck.hero_picked?
     raise 'Hero can not be nil or empty' if !params[:hero] || params[:hero] == ''
@@ -82,10 +73,6 @@ class DecksController < ApplicationController
 
     def set_deck
       @deck = @user.current_deck || @user.create_deck
-    end
-
-    def set_opponents
-      @opponents = User.where.not(id: @user.id)
     end
 
     def set_heroes

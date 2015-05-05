@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
   has_many :collections
   has_many :cards, through: :collections
+  has_many :cards_to_draw, through: :prints
 
   has_many :decks
 

@@ -108,28 +108,19 @@ class Card < ActiveRecord::Base
   end
 
   def self.get_trio(options = {})
-    if options[:opponent_id].nil?
-      is_total_must_be_clean = false
-      users = options[:user_id]
-    else
-      is_total_must_be_clean = true
-      users = [options[:user_id], options[:opponent_id]]
-    end
-
-    cards = cards_to_draw(user_id: users, hero_id: options[:hero_id])
+    cards = cards_to_draw(user_id: options[:user_id], hero_id: options[:hero_id])
     
-    flattened_cards = Card.flatten(cards, is_total_must_be_clean)
+    flattened_cards = Card.flatten(cards)
     if !options[:cards_in_deck].nil?
       Card.remove_cards_already_in_deck(options[:cards_in_deck], flattened_cards)
     end
     random_nuplet(3, flattened_cards.uniq)
   end
 
-  def self.flatten(cards, is_total_must_be_clean = false)
+  def self.flatten(cards)
     flattened_cards = []
     cards.each do |c|
-      total = is_total_must_be_clean ? clean_total(c.total) : c.total
-      total.times { flattened_cards.push(c) }
+      c.total.times { flattened_cards.push(c) }
     end
     flattened_cards
   end

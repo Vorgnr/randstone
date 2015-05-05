@@ -138,20 +138,6 @@ RSpec.describe Card, type: :model do
         expect(flat_cards.all? { |c| c.is_a? Card }).to be true
       end
     end
-
-    context 'when total has to be cleaned' do
-      it 'it flattened cards' do
-        user = create(:user)
-        userb = create(:user)
-        cards = 5.times.map { create(:card) }
-        user.cards << cards + cards
-        userb.cards << cards
-        cards = Card.cards_to_draw(user_id: [user.id, userb.id] )
-        flat_cards = Card.flatten(cards, true);
-        expect(flat_cards.length).to eq 5
-        expect(flat_cards.all? { |c| c.is_a? Card }).to be true
-      end
-    end
   end
 
   describe '.get_trio' do
@@ -192,7 +178,7 @@ RSpec.describe Card, type: :model do
         deck.cards << [card_one]
         cards_to_draw = Card.cards_to_draw(user_id: user.id)
         expect(cards_to_draw.length).to eq 4
-        flattened_cards = Card.flatten(cards_to_draw, false)
+        flattened_cards = Card.flatten(cards_to_draw)
         expect(flattened_cards.length).to eq 8
         Card.remove_cards_already_in_deck(deck.cards, flattened_cards)
         expect(flattened_cards.length).to eq 7
