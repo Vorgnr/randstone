@@ -51,10 +51,19 @@ RSpec.describe User, type: :model do
       cards_with_hero = 5.times.map { create(:card, hero: hero) }
       cards_with_herob = 5.times.map { create(:card, hero: herob) }
       cards = 5.times.map { create(:card) }
-      puts cards[1..3].inspect
       user.cards << cards[1..3] + cards_with_hero[1..3]
-      prints = user.set_cards_to_draw_for_current_deck(hero.id)
-      expect(prints.length).to eq 6
+      user.set_cards_to_draw_for_current_deck(hero.id)
+      expect(user.cards_to_draw.length).to eq 6
+    end
+  end
+
+  describe '#delete_all_cards_to_draw' do
+    it 'delete all user\s cards to draw' do
+      user.cards << 2.times.map { create(:card) }
+      user.set_cards_to_draw_for_current_deck(nil)
+      expect(user.cards_to_draw.length).to eq 2
+      user.delete_all_cards_to_draw
+      expect(user.cards_to_draw.length).to eq 0
     end
   end
 end

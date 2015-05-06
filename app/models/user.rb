@@ -33,4 +33,8 @@ class User < ActiveRecord::Base
   def set_cards_to_draw_for_current_deck(hero_id)
     self.cards_to_draw << Card.join_collection_of(self.id).with_hero(hero_id)
   end
+
+  def delete_all_cards_to_draw
+    self.cards_to_draw.delete_all
+  end
 end
