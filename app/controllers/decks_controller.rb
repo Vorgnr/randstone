@@ -62,6 +62,7 @@ class DecksController < ApplicationController
     raise "Unexpected deck's status" unless @deck.hero_picked?
     raise 'Hero can not be nil or empty' if !params[:hero] || params[:hero] == ''
     if @deck.set_hero(params[:hero])
+      @user.set_cards_to_draw_for_current_deck(params[:hero])
       redirect_to new_deck_path
     end
   end

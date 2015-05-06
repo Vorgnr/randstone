@@ -5,7 +5,9 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
   has_many :collections
   has_many :cards, through: :collections
-  has_many :cards_to_draw, through: :prints
+  
+  has_many :prints
+  has_many :cards_to_draw, through: :prints, :source => "card"
 
   has_many :decks
 
@@ -26,5 +28,9 @@ class User < ActiveRecord::Base
 
   def create_deck
     @deck = Deck.create(user_id: self.id)
+  end
+
+  def set_cards_to_draw_for_current_deck(hero_id)
+    self.cards_to_draw << Card.join_collection_of(self.id).with_hero(hero_id)
   end
 end

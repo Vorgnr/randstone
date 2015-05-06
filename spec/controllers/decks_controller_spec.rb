@@ -149,6 +149,14 @@ RSpec.describe DecksController, type: :controller do
       post :add_hero, hero: 1
       expect(assigns(:deck).hero).to eq Hero.find(1)
     end
+
+    it 'should set user cards to draw' do
+      hero = Hero.create(id: 1)
+      user_with_hero_picked_deck.cards << create(:card, hero: hero)
+      sign_in(user_with_hero_picked_deck)
+      post :add_hero, hero: 1
+      expect(assigns(:user).cards_to_draw.length).to eq 1
+    end
   end
 
   describe '#add_card' do

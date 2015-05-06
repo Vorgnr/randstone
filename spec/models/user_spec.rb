@@ -43,4 +43,18 @@ RSpec.describe User, type: :model do
       expect(user.current_deck).to eq deck
     end
   end
+
+  describe '#set_cards_to_draw_for_current_deck' do
+    it 'should save prints' do
+      hero = create(:hero)
+      herob = create(:hero)
+      cards_with_hero = 5.times.map { create(:card, hero: hero) }
+      cards_with_herob = 5.times.map { create(:card, hero: herob) }
+      cards = 5.times.map { create(:card) }
+      puts cards[1..3].inspect
+      user.cards << cards[1..3] + cards_with_hero[1..3]
+      prints = user.set_cards_to_draw_for_current_deck(hero.id)
+      expect(prints.length).to eq 6
+    end
+  end
 end
