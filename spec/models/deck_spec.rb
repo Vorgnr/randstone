@@ -34,9 +34,9 @@ RSpec.describe Deck, type: :model do
     context 'when user does have one' do
       it 'should return user\'s deck ' do
         user_with_uncompleted_deck = create(:user, :with_uncompleted_deck)
-        completed_decks = Deck.current_user_deck(user_with_uncompleted_deck.id)
-        expect(completed_decks).to be_a Deck
-        expect(completed_decks.completed?).to be false
+        user_completed_decks = Deck.current_user_deck(user_with_uncompleted_deck.id)
+        expect(user_completed_decks).to be_a Deck
+        expect(user_completed_decks.completed?).to be false
       end
     end
 
@@ -92,4 +92,13 @@ RSpec.describe Deck, type: :model do
       end
     end
   end
+
+  describe '#user_completed_decks' do
+    it 'should retrieve all completed user\'s deck' do
+      deck_completed = create(:deck_completed)
+      user = create(:user)
+      user.decks << [deck_completed, deck]
+      expect(deck.user_completed_decks(user.id).length).to eq 1
+    end
+  end 
 end

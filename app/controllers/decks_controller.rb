@@ -3,7 +3,7 @@ class DecksController < ApplicationController
   before_action :set_deck, only: [:new, :add_hero, :add_card]
 
   def index
-    @decks = Deck.completed_decks(@user.id)
+    @decks = Deck.user_completed_decks(@user.id)
   end
 
   def show
