@@ -52,7 +52,7 @@ class Card < ActiveRecord::Base
 
   scope :filter_by_cost, ->(cost = "All") {
     if cost.to_i >= 7
-      where("cost > ?", cost)
+      where("cost >= ?", cost)
     else
       where(cost: cost) unless cost == "All"
     end

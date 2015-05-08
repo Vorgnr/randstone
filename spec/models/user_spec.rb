@@ -66,9 +66,4 @@ RSpec.describe User, type: :model do
       expect(user.cards_to_draw.length).to eq 0
     end
   end
-
-  describe '#completed_decks' do
-    it 'should retrieve all ' do
-    end
-  end 
 end
