@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   end
 
   def current_deck
-    Deck.current_users_deck(self.id)
+    Deck.current_user_deck(self.id)
   end
 
   def create_deck

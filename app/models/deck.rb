@@ -21,7 +21,7 @@ class Deck < ActiveRecord::Base
     self.update_attributes(status: 'pick_cards', hero_id: hero_id)
   end
 
-  def self.current_users_deck(user_id)
+  def self.current_user_deck(user_id)
     return Deck.where(user_id: user_id).where.not(status: 3).first
   end
 
