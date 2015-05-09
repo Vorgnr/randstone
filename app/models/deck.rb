@@ -14,7 +14,7 @@ class Deck < ActiveRecord::Base
   def pick_heroes(heroes)
     heroes = heroes.map { |h| h.id } if heroes.all? { |h| h.is_a? Hero }
     HeroSelection.save_selection(self.id, heroes)
-    self.update_attributes(:status => 'hero_picked')
+    self.update_attributes(status: 'hero_picked')
   end
 
   def set_hero(hero_id)
@@ -42,7 +42,12 @@ class Deck < ActiveRecord::Base
     cards_selection = self.current_cards_selection
     cards_selection.destroy unless cards_selection.nil? 
     if self.cards.length == 30
-      self.update_attributes(:status => 'completed')
+      self.complete
     end
+  end
+
+  def complete
+    self.update_attributes(status: 'completed')
+    Print.delete_by_user_id(self.user_id)
   end
 end
