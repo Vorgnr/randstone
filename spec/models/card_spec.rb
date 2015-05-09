@@ -241,6 +241,81 @@ RSpec.describe Card, type: :model do
       expect(Card.join_collection_of(user.id).length).to eq 2
     end
   end
+
+  describe 'filter_by_cost' do
+    before(:each) do
+      create(:card, cost: 2)
+      create(:card, cost: 9)
+      create(:card, cost: 7)
+     end
+
+    context 'when cost == All' do
+      it 'should not filter' do
+        expect(Card.filter_by_cost.length).to eq 3
+      end
+    end
+
+    context 'when cost == 7' do
+      it 'should return card with cost >= 7' do
+        expect(Card.filter_by_cost(7).length).to eq 2
+      end
+    end
+
+    context 'when cost < 7' do
+      it 'should return card with cost < 7' do
+        expect(Card.filter_by_cost(2).length).to eq 1
+      end
+    end
+  end
+
+  describe 'with_name' do
+    before(:each) do
+      2.times { create(:card, name: 'dummy') }
+    end
+
+    it 'should return which start with name' do
+      create(:card, name: 'abcxxx')
+      expect(Card.with_name('abc').length).to eq 1
+    end
+
+    it 'should return which contains name' do
+      create(:card, name: 'xxxxabcxxx')
+      expect(Card.with_name('abc').length).to eq 1
+    end
+
+    it 'should return which end with name' do
+      create(:card, name: 'xxxxabc')
+      expect(Card.with_name('abc').length).to eq 1
+    end
+  end
+
+  describe 'filter_by_hero' do
+    let(:hero_a) { create(:hero) }
+    let(:hero_b) { create(:hero) }
+    before(:each) do
+      create(:card, hero: hero_a)
+      create(:card)
+      create(:card, hero: hero_b)
+    end
+
+    context 'when hero is empty' do
+      it 'should return card without hero' do
+        expect(Card.filter_by_hero('').length).to eq 1
+      end
+    end
+
+    context 'when hero == All' do
+      it 'should not filter by hero' do
+        expect(Card.filter_by_hero('All').length).to eq 3
+      end
+    end
+
+    context 'when hero is a correct hero id' do
+      it 'should filter by hero id' do
+        expect(Card.filter_by_hero(hero_a.id.to_s).length).to eq 1
+      end
+    end
+  end
 end
 
 
