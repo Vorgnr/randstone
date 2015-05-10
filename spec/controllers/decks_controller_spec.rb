@@ -80,8 +80,9 @@ RSpec.describe DecksController, type: :controller do
     context 'when user has deck with pick_cards status' do
       context 'when @desk has no current card selection' do
         it 'should assign @cards' do
-          cards = 3.times.map { create(:card) }
+          cards = 3.times.map { create(:card, :with_common_quality) }
           user_with_pick_cards_deck.cards << cards
+          user_with_pick_cards_deck.set_cards_to_draw_for_current_deck nil
           sign_in(user_with_pick_cards_deck)
           get :new
           expect(assigns(:cards).length).to eq 3

@@ -22,7 +22,9 @@ class DecksController < ApplicationController
       if !card_selection.nil?
         @cards = Card.find(card_selection.values)
       else
-        @cards = Card.get_trio(user_id: @user.id, hero_id: @deck.hero_id, cards_in_deck: @deck.cards)
+        quality = Card.random_quality(Print.get_available_qualities_for_user(@user.id))
+        filtered_cards = @user.cards_to_draw.with_qualities(quality)
+        @cards = Card.random_nuplet(3, filtered_cards.uniq.to_a)
         @deck.create_card_selection(@cards.map { |c| c.id })
       end
       set_mana_curve
