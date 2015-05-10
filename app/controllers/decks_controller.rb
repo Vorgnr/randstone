@@ -22,7 +22,7 @@ class DecksController < ApplicationController
       if !card_selection.nil?
         @cards = Card.find(card_selection.values)
       else
-        quality = Card.random_quality(Print.get_available_qualities_for_user(@user.id))
+        quality = Card.random_quality(Print.get_available_qualities_for_user(@user.id).map { |p| p.quality })
         filtered_cards = @user.cards_to_draw.with_qualities(quality)
         @cards = Card.random_nuplet(3, filtered_cards.uniq.to_a)
         @deck.create_card_selection(@cards.map { |c| c.id })

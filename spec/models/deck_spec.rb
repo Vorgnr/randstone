@@ -114,7 +114,7 @@ RSpec.describe Deck, type: :model do
       deck_completed = create(:deck_completed)
       user = create(:user)
       user.decks << [deck_completed, deck]
-      expect(deck.user_completed_decks(user.id).length).to eq 1
+      expect(Deck.user_completed_decks(user.id).length).to eq 1
     end
   end 
 end

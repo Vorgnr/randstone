@@ -25,7 +25,7 @@ class Deck < ActiveRecord::Base
     return Deck.where(user_id: user_id).where.not(status: 3).first
   end
 
-  def user_completed_decks(user_id)
+  def self.user_completed_decks(user_id)
     return Deck.where(user_id: user_id).where(status: 3)
   end
 
