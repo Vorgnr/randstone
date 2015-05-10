@@ -160,9 +160,14 @@ RSpec.describe DecksController, type: :controller do
   end
 
   describe '#add_card' do
+    let(:card) { create(:card) }
+    before(:each) do
+      user_with_pick_cards_deck.cards << card
+      user_with_pick_cards_deck.set_cards_to_draw_for_current_deck(nil)
+    end
+
     context 'when @deck has not pick_cards status' do
       it 'should raise error' do
-        card = create(:card)
         sign_in(user)
         expect { post :add_card, card: card.id }.to raise_error("Unexpected deck's status")
       end
@@ -180,7 +185,7 @@ RSpec.describe DecksController, type: :controller do
       it 'should redirect to decks_path' do
         sign_in(user_with_pick_cards_deck)
         user_with_pick_cards_deck.current_deck.cards << 29.times.map { create(:card) }
-        expect(post :add_card, card: create(:card).id).to redirect_to decks_path
+        expect(post :add_card, card: card.id).to redirect_to decks_path
       end
     end
 
@@ -188,12 +193,11 @@ RSpec.describe DecksController, type: :controller do
       it 'should redirect to new_deck_path' do
         sign_in(user_with_pick_cards_deck)
         user_with_pick_cards_deck.current_deck.cards << 5.times.map { create(:card) }
-        expect(post :add_card, card: create(:card).id).to redirect_to new_deck_path
+        expect(post :add_card, card: card.id).to redirect_to new_deck_path
       end
     end
 
     it 'should add card' do
-      card = create(:card)
       sign_in(user_with_pick_cards_deck)
       expect(user_with_pick_cards_deck.current_deck.cards.length).to eq 0
       expect(post :add_card, card: card.id)

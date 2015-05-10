@@ -37,4 +37,8 @@ class User < ActiveRecord::Base
   def delete_all_cards_to_draw
     self.cards_to_draw.delete_all
   end
+
+  def delete_one_from_cards_to_draw(card_id)
+    Print.delete_one_by_user_id(card_id, self.id)
+  end
 end

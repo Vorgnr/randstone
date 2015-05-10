@@ -66,4 +66,14 @@ RSpec.describe User, type: :model do
       expect(user.cards_to_draw.length).to eq 0
     end
   end
+
+  describe '#delete_one_from_cards_to_draw' do
+    it 'should work' do
+      card = create(:card)
+      user.cards << [card, card]
+      user.set_cards_to_draw_for_current_deck(nil)
+      user.delete_one_from_cards_to_draw(card.id)
+      expect(user.cards_to_draw.length).to eq 1
+    end
+  end
 end

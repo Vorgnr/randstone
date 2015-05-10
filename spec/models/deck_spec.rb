@@ -66,9 +66,17 @@ RSpec.describe Deck, type: :model do
   end
 
   describe '#add_card' do
+    let(:card) { create(:card) }
+    let(:user) { create(:user) }
+    before(:each) do
+      user.decks << deck
+      user.cards << card
+      user.set_cards_to_draw_for_current_deck(nil)
+    end
+
     context 'when deck has less than 29 cards' do
       it 'should add card to deck' do
-        deck.add_card(create(:card))
+        deck.add_card(card)
         expect(deck.cards.length).to eq 1
       end
     end
@@ -78,27 +86,23 @@ RSpec.describe Deck, type: :model do
       
       it 'should add card to deck and set status to completed' do
         deck.cards << cards
-        deck.add_card(create(:card))
+        deck.add_card(card)
         expect(deck.cards.length).to eq 30
         expect(deck.completed?).to be true
       end
 
       it 'should destroy deck\'s card selection' do
         deck.cards << cards
-        card_to_add = create(:card)
-        deck.create_card_selection([cards[0].id, cards[1].id, card_to_add.id])
-        deck.add_card(card_to_add)
+        deck.create_card_selection([cards[0].id, cards[1].id, card.id])
+        deck.add_card(card)
         expect(deck.current_cards_selection).to eq nil
       end
 
       it 'should destroy current user\'s prints' do
-        user = create(:user)
-        user.cards_to_draw << [cards[0], cards[1]]
-        user.decks << deck
+        user.cards_to_draw << [cards[0]]
         deck.cards << cards
-        card_to_add = create(:card)
-        deck.create_card_selection([cards[0].id, cards[1].id, card_to_add.id])
-        deck.add_card(card_to_add)
+        deck.create_card_selection([cards[0].id, cards[1].id, card.id])
+        deck.add_card(card)
         print "user id => #{user.id}"
         expect(Print.where(user: user).length).to eq 0
       end

@@ -13,9 +13,16 @@ RSpec.describe Card, type: :model do
     end
 
     context 'when users have not enough cards' do
-      it 'should raise error' do
-        expect { Card.random_nuplet(5, nil) }.to raise_error
-        expect { Card.random_nuplet(5, [nil, nil]) }.to raise_error
+      context 'when cards is nil' do
+        it 'should raise error ' do
+          expect { Card.random_nuplet(5, nil) }.to raise_error
+        end
+      end
+      context 'when cards is not nil' do
+        it 'should return duplicate cards nuplet ' do
+          cards = 2.times.map { create(:card) }
+          expect(Card.random_nuplet(5, cards).length).to eq 5
+        end
       end
     end
   end
@@ -34,7 +41,7 @@ RSpec.describe Card, type: :model do
 
   describe '.random_quality' do
     it 'should return an int or an array of int' do
-      quality = Card.random_quality
+      quality = Card.random_quality [5, 4, 3]
       result = (quality.is_a? Integer) || quality.all? { |q| q.is_a? Integer }
       expect(result).to be true
     end
@@ -108,11 +115,36 @@ RSpec.describe Card, type: :model do
   end
 
   describe '.i_to_quality' do
-    it 'should convert integer to quality' do
-      expect(Card.random_to_quality(1)).to eq 5
-      expect(Card.random_to_quality(2)).to eq 4
-      expect(Card.random_to_quality(11)).to eq 3
-      expect(Card.random_to_quality(50)).to eq [0, 1]
+    context 'when all qualities are availables' do
+      it 'should convert integer to quality' do
+        availables_qualities = [5, 4, 3]
+        expect(Card.random_to_quality(1, availables_qualities)).to eq 5
+        expect(Card.random_to_quality(2, availables_qualities)).to eq 4
+        expect(Card.random_to_quality(11, availables_qualities)).to eq 3
+        expect(Card.random_to_quality(50, availables_qualities)).to eq [0, 1]
+      end
+    end
+
+    context 'when all qualities are not availables' do
+      context 'when legendary quality is not available' do
+        it 'should convert integer to quality' do
+          expect(Card.random_to_quality(1, [4, 3])).to eq 4
+          expect(Card.random_to_quality(1, [3])).to eq 3
+        end
+      end
+
+      context 'when epic quality is not available' do
+        it 'should convert integer to quality' do
+          expect(Card.random_to_quality(1, [5, 3])).to eq 5
+          expect(Card.random_to_quality(2, [5, 3])).to eq 3
+        end
+      end
+
+      context 'when rare quality is not available' do
+        it 'should convert integer to quality' do
+          expect(Card.random_to_quality(15, [5, 4])).to eq [0, 1]
+        end
+      end
     end
   end
 

@@ -65,10 +65,16 @@ class Card < ActiveRecord::Base
   }
 
   def self.random_nuplet(n, cards)
-    raise('Not enough card') if cards.nil? || cards.length < n
+    raise('Not enough card') if cards.nil?
     cards_buffer = cards.clone
+    not_enough_cards = cards.length < n
     n.times.map do
-      cards_buffer.slice!(rand(0..cards_buffer.length - 1))
+      index_to_remove = rand(0..cards_buffer.length - 1)
+      if not_enough_cards
+        cards_buffer.slice(index_to_remove)
+      else
+        cards_buffer.slice!(index_to_remove)
+      end
     end
   end
 
@@ -76,25 +82,21 @@ class Card < ActiveRecord::Base
     [ 'base', 'common', nil, 'rare', 'epic', 'legendary' ][i]
   end
 
-  def self.random_quality
+  def self.random_quality(available_qualities)
     random = rand(1..100)
-    Card.random_to_quality(random)
+    Card.random_to_quality(random, available_qualities)
   end
 
-  # def available_qualities
-  #   self.cards.group(:quality).count
-  # end
-
-  def self.random_to_quality(r)
+  def self.random_to_quality(r, available_qualities)
     # Legendary 1%
     # Epic 9%
     # Rare 20%
 
-    if r == 1
+    if r == 1 and available_qualities.include? 5
       quality = 5
-    elsif r.between?(2, 10)
+    elsif r <= 10 and available_qualities.include? 4
       quality = 4
-    elsif r.between?(11, 32)
+    elsif r <= 32 and available_qualities.include? 3
       quality = 3
     else
       quality = [0, 1]

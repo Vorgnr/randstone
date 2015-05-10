@@ -40,7 +40,8 @@ class Deck < ActiveRecord::Base
   def add_card(card)
     self.cards << card
     cards_selection = self.current_cards_selection
-    cards_selection.destroy unless cards_selection.nil? 
+    cards_selection.destroy unless cards_selection.nil?
+    Print.delete_one_by_user_id(card.id, self.user_id)
     if self.cards.length == 30
       self.complete
     end
